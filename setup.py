@@ -28,11 +28,6 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     packages=find_packages(),
-    install_requires=['ruamel.yaml'],
-    extras_require={
-        'dev': ['pytest>=3.6', 'pytest-cov', 'flake8', 'sphinx-rtd-theme',
-                'coveralls'],
-    },
     project_urls={
         'Bug Reports': URL + '/issues',
         'Source': URL,

@@ -1,4 +1,5 @@
 # tree-config
+
 Configuration of objects that are nested in a tree-like fashion.
 
 For more information: http://matham.github.io/tree_config/index.html
