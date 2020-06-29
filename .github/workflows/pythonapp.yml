@@ -105,7 +105,7 @@ jobs:
         git config --global user.email "moiein2000@gmail.com"
         git config --global user.name "Matthew Einhorn"
         git remote rm origin || true
-        git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/matham/tree_config.git"
+        git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/matham/tree-config.git"
 
         git checkout --orphan gh-pages
         cp -r .git ~/docs_git
