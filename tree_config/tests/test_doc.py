@@ -140,6 +140,7 @@ a child
  Sometimes it isn't nice though.
  '''.strip()
 
+
 @pytest.mark.parametrize(
     'obj', [
         ['from tree_config.tests.test_doc import '
