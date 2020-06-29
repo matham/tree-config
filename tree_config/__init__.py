@@ -66,8 +66,9 @@ class Configurable:
         pass
 
 
-def get_config_prop_items(obj) -> Dict[str, Any]:
-    return {prop: getattr(obj, prop)for prop in get_config_prop_names(obj)}
+def get_config_prop_items(obj_or_cls, get_attr=getattr) -> Dict[str, Any]:
+    return {prop: get_attr(obj_or_cls, prop)
+            for prop in get_config_prop_names(obj_or_cls)}
 
 
 def get_config_prop_names(obj_or_cls) -> List[str]:
@@ -96,10 +97,11 @@ def _get_config_prop_names(obj_or_cls) -> List[str]:
     return list(props)
 
 
-def get_config_children_items(obj) -> List[Tuple[str, str, Any]]:
+def get_config_children_items(
+        obj_or_cls, get_attr=getattr) -> List[Tuple[str, str, Any]]:
     return [
-        (name, prop, getattr(obj, prop))
-        for name, prop in get_config_children_names(obj).items()
+        (name, prop, get_attr(obj_or_cls, prop))
+        for name, prop in get_config_children_names(obj_or_cls).items()
     ]
 
 
@@ -129,34 +131,34 @@ def _get_config_children_names(obj_or_cls) -> Dict[str, str]:
     return children
 
 
-def _fill_config_from_children(children, config: dict):
+def _fill_config_from_children(children, config: dict, get_attr):
     for name, prop, obj in children:
         if obj is None:
             continue
 
         if isinstance(obj, (list, tuple)):
-            config[name] = [read_config_from_object(o) for o in obj]
+            config[name] = [read_config_from_object(o, get_attr) for o in obj]
         else:
-            config[name] = read_config_from_object(obj)
+            config[name] = read_config_from_object(obj, get_attr)
 
 
-def read_config_from_object(obj):
+def read_config_from_object(obj, get_attr=getattr):
     # TODO: break infinite cycle if obj is listed in its nested config classes
     config = {}
 
     # get all the configurable classes used by the obj
-    children = get_config_children_items(obj)
-    _fill_config_from_children(children, config)
+    children = get_config_children_items(obj, get_attr)
+    _fill_config_from_children(children, config, get_attr)
 
     used_keys = {s for name, prop, obj in children for s in (name, prop)}
 
-    for prop, value in get_config_prop_items(obj).items():
+    for prop, value in get_config_prop_items(obj, get_attr).items():
         if prop not in used_keys:
             config[prop] = value
     return config
 
 
-def _apply_config_to_children(root_obj, children, config):
+def _apply_config_to_children(root_obj, children, config, get_attr, set_attr):
     for name, prop, obj in children:
         if obj is None or name not in config:
             continue
@@ -164,12 +166,12 @@ def _apply_config_to_children(root_obj, children, config):
         # todo: handle when obj is a list/dict
         method = getattr(root_obj, 'apply_config_child', None)
         if method is None:
-            apply_config(obj, config[name])
+            apply_config(obj, config[name], get_attr, set_attr)
         else:
             method(name, prop, obj, config[name])
 
 
-def apply_config(obj, config: dict):
+def apply_config(obj, config: dict, get_attr=getattr, set_attr=setattr):
     """Takes the config data read with :func:`read_config_from_object`
     or :func:`read_config_from_file` and applies
     them to any existing class instances listed in classes.
@@ -177,8 +179,8 @@ def apply_config(obj, config: dict):
     Calls :func:`post_config_applied` after object is configured.
     """
     # get all the configurable classes used by the obj
-    children = get_config_children_items(obj)
-    _apply_config_to_children(obj, children, config)
+    children = get_config_children_items(obj, get_attr)
+    _apply_config_to_children(obj, children, config, get_attr, set_attr)
 
     used_keys = {s for name, prop, obj in children for s in (name, prop)}
 
@@ -186,7 +188,7 @@ def apply_config(obj, config: dict):
     if method is None:
         for k, v in config.items():
             if k not in used_keys:
-                setattr(obj, k, v)
+                set_attr(obj, k, v)
     else:
         for k, v in config.items():
             if k not in used_keys:
@@ -210,9 +212,9 @@ def read_config_from_file(filename):
     return opts
 
 
-def load_config(obj, filename):
+def load_config(obj, filename, get_attr=getattr):
     if not os.path.exists(filename):
-        dump_config(filename, read_config_from_object(obj))
+        dump_config(filename, read_config_from_object(obj, get_attr))
 
     return read_config_from_file(filename)
 
@@ -222,10 +224,10 @@ def dump_config(filename, data):
         fh.write(yaml_dumps(data))
 
 
-def load_apply_save_config(obj, filename):
-    config = load_config(obj, filename)
-    apply_config(obj, config)
+def load_apply_save_config(obj, filename, get_attr=getattr, set_attr=setattr):
+    config = load_config(obj, filename, get_attr)
+    apply_config(obj, config, get_attr, set_attr)
 
-    config = read_config_from_object(obj)
+    config = read_config_from_object(obj, get_attr)
     dump_config(filename, config)
     return config

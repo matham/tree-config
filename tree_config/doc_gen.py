@@ -75,13 +75,11 @@ __all__ = ('create_doc_listener', 'write_config_attrs_rst')
 
 
 def _get_config_children_objects(
-        obj_or_cls, getattr_converter=None) -> List[Tuple[str, str, Any]]:
+        obj_or_cls, get_attr=getattr) -> List[Tuple[str, str, Any]]:
     annotations = get_class_annotations(obj_or_cls)
     objects = []
     for name, prop in get_config_children_names(obj_or_cls).items():
-        obj = getattr(obj_or_cls, prop)
-        if obj is not None and getattr_converter is not None:
-            obj = getattr_converter(obj)
+        obj = get_attr(obj_or_cls, prop)
 
         if obj is None:
             # try searching annotations for type
@@ -100,8 +98,7 @@ def _get_config_children_objects(
 
 
 def _get_config_prop_items_class(
-        obj_or_cls, getattr_converter=None
-) -> Dict[str, List[Tuple[str, Any]]]:
+        obj_or_cls, get_attr=getattr) -> Dict[str, List[Tuple[str, Any]]]:
     cls = obj_or_cls
     if not isclass(obj_or_cls):
         cls = obj_or_cls.__class__
@@ -118,10 +115,7 @@ def _get_config_prop_items_class(
                 raise Exception('Missing attribute <{}> in <{}>'.
                                 format(prop, cls.__name__))
 
-            value = getattr(cls, prop)
-            if value is not None and getattr_converter is not None:
-                value = getattr_converter(value)
-            cls_props[prop] = value
+            cls_props[prop] = get_attr(cls, prop)
 
         if cls_props:
             classes[cls_name] = list(cls_props.items())
@@ -194,7 +188,7 @@ def create_doc_listener(sphinx_app, package, filename):
     sphinx_app.connect('build-finished', dump_config_attrs_doc)
 
 
-def _walk_config_classes_flat(obj, getattr_converter=None):
+def _walk_config_classes_flat(obj, get_attr=getattr):
     classes_flat = []  # stores all the configurable classes
     stack = deque([(-1, '', obj)])
 
@@ -203,8 +197,7 @@ def _walk_config_classes_flat(obj, getattr_converter=None):
         # now we "visited" obj
         classes_flat.append((level, name, obj, {}, {}))
 
-        children = _get_config_children_objects(
-            obj, getattr_converter=getattr_converter)
+        children = _get_config_children_objects(obj, get_attr=get_attr)
 
         for child_name, child_prop, child_obj in sorted(
                 children, key=lambda x: x[0]):
@@ -219,12 +212,11 @@ def _walk_config_classes_flat(obj, getattr_converter=None):
     return classes_flat
 
 
-def _get_config_attrs_doc(obj, filename, getattr_converter=None):
+def _get_config_attrs_doc(obj, filename, get_attr=getattr):
     """Objects is a dict of object (class) paths and keys are the names of the
     config attributes of the class.
     """
-    classes_flat = _walk_config_classes_flat(
-        obj, getattr_converter=getattr_converter)
+    classes_flat = _walk_config_classes_flat(obj, get_attr=get_attr)
 
     # get the modules associated with each of the classes
     for _, _, obj, classes_props, _ in classes_flat:
@@ -247,8 +239,7 @@ def _get_config_attrs_doc(obj, filename, getattr_converter=None):
 
 
 def write_config_attrs_rst(
-        obj, package, app, exception, filename, rst_fname,
-        getattr_converter=None):
+        obj, package, app, exception, filename, rst_fname, get_attr=getattr):
     """Walks through all the configurable classes of this package
     (should be gotten from
     :meth:`~base_kivy_app.app.BaseKivyApp.get_config_classes` or
@@ -270,7 +261,7 @@ ProjectApp.get_config_classes(), project_name))
     n = len(headings) - 1
 
     # get the docs for the props
-    classes_flat = _get_config_attrs_doc(obj, filename, getattr_converter)
+    classes_flat = _get_config_attrs_doc(obj, filename, get_attr)
 
     header = '{} Config'.format(package.__name__.upper())
     lines = [
