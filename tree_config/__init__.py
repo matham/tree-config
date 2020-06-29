@@ -1,5 +1,5 @@
-"""tree-config
-==============
+"""Configuration
+=================
 
 :mod:`tree-config` provides the tools to configure applications where the
 objects to be configured are nested in a tree-like fashion such that they

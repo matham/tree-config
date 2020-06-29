@@ -1,5 +1,5 @@
-"""doc_gen
-==============
+"""Documentation generation
+============================
 
 Overview
 ---------
@@ -66,7 +66,6 @@ from typing import Tuple, List, Dict, Any
 import operator
 import json
 from collections import deque
-from kivy.properties import Property
 
 from .utils import get_class_bases, get_class_annotations
 from tree_config import get_config_children_names
