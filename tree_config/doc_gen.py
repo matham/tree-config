@@ -16,7 +16,7 @@ Each app instance defines a application class based on
 :class:`~base_kivy_app.app.BaseKivyApp`. Using this classe's
 :meth:`~base_kivy_app.app.BaseKivyApp.get_config_classes` method we get a list
 of all classes used in the current app that requires configuration
-and :func:`write_config_attrs_rst` is used to combine all these docs
+and :func:`write_config_props_rst` is used to combine all these docs
 and display them in a single place in the generated html pages.
 
 Similarly, when the app is run, a single json file is generated with all these
@@ -48,7 +48,7 @@ Then, in the sphinx conf.py file do::
 
         app.connect(
             'build-finished', partial(
-                write_config_attrs_rst, classes, package, filename=fname)
+                write_config_props_rst, classes, package, filename=fname)
         )
 
 and run `make html` twice. This will create the ``config_attrs.json`` file
@@ -70,7 +70,7 @@ from collections import deque
 from .utils import get_class_bases, get_class_annotations
 from tree_config import get_config_children_names
 
-__all__ = ('create_doc_listener', 'write_config_attrs_rst')
+__all__ = ('create_doc_listener', 'write_config_props_rst')
 
 
 def _get_config_children_objects(
@@ -122,7 +122,7 @@ def _get_config_prop_items_class(
     return classes
 
 
-def create_doc_listener(sphinx_app, package, filename):
+def create_doc_listener(sphinx_app, package_name, filename):
     """Creates a listener for the ``__config_props__`` attributes and dumps
     the docs of any props listed to ``filename``. If the file
     already exists, it extends it with new data and overwrites any exiting
@@ -147,7 +147,7 @@ def create_doc_listener(sphinx_app, package, filename):
         data = {}
 
     def config_attrs_doc_listener(app, what, name, obj, options, lines):
-        if not name.startswith(package.__name__):
+        if not name.startswith(package_name):
             return
 
         if what == 'class':
@@ -237,8 +237,9 @@ def _get_config_attrs_doc(obj, filename, get_attr=getattr):
     return classes_flat
 
 
-def write_config_attrs_rst(
-        obj, package, app, exception, filename, rst_fname, get_attr=getattr):
+def write_config_props_rst(
+        obj, project, app, exception, filename, rst_filename,
+        get_attr=getattr):
     """Walks through all the configurable classes of this package
     (should be gotten from
     :meth:`~base_kivy_app.app.BaseKivyApp.get_config_classes` or
@@ -249,7 +250,7 @@ def write_config_attrs_rst(
     For example in the sphinx conf.py file do::
 
         def setup(app):
-            app.connect('build-finished', partial(write_config_attrs_rst, \
+            app.connect('build-finished', partial(write_config_props_rst, \
 ProjectApp.get_config_classes(), project_name))
 
     where project_name is the project module and ProjectApp is the App of the
@@ -262,7 +263,7 @@ ProjectApp.get_config_classes(), project_name))
     # get the docs for the props
     classes_flat = _get_config_attrs_doc(obj, filename, get_attr)
 
-    header = '{} Config'.format(package.__name__.upper())
+    header = '{} Config'.format(project.upper())
     lines = [
         header, '=' * len(header), '',
         'The following are the configuration options provided by the app. '
@@ -290,11 +291,11 @@ ProjectApp.get_config_classes(), project_name))
 
     lines = '\n'.join(lines)
     try:
-        with open(rst_fname) as fh:
+        with open(rst_filename) as fh:
             if fh.read() == lines:
                 return
     except IOError:
         pass
 
-    with open(rst_fname, 'w') as fh:
+    with open(rst_filename, 'w') as fh:
         fh.write(lines)
