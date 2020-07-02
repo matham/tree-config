@@ -2,8 +2,7 @@ import pytest
 import subprocess
 import os
 import pathlib
-import json
-import textwrap
+from ..utils import yaml_loads
 
 conf_contents = '''
 import os
@@ -16,7 +15,7 @@ extensions = ['sphinx.ext.autodoc']
 
 
 def setup(app):
-    fname = os.environ['TREE_CONFIG_DOC_JSON_PATH']
+    fname = os.environ['TREE_CONFIG_DOC_YAML_PATH']
     rst_filename = os.environ['TREE_CONFIG_DOC_RST_PATH']
     create_doc_listener(app, 'tree_config', fname)
     {}
@@ -74,7 +73,7 @@ def config_doc_files(
         tmp_path: pathlib.Path, conf_obj: list, auto_doc_mods: list):
     source = tmp_path / 'source'
     build = tmp_path / 'build'
-    json_file = tmp_path / 'config_props.json'
+    yaml_file = tmp_path / 'config_props.yaml'
     rst_file = tmp_path / 'config_props.rst'
 
     if not source.exists():
@@ -89,7 +88,7 @@ def config_doc_files(
     (source / 'index.rst').write_text(index_rst)
 
     env = os.environ.copy()
-    env['TREE_CONFIG_DOC_JSON_PATH'] = str(json_file)
+    env['TREE_CONFIG_DOC_YAML_PATH'] = str(yaml_file)
     env['TREE_CONFIG_DOC_RST_PATH'] = str(rst_file)
 
     try:
@@ -100,9 +99,9 @@ def config_doc_files(
         print(e.output.decode('utf8'))
         raise
 
-    assert json_file.exists()
+    assert yaml_file.exists()
     assert rst_file.exists()
-    return json_file, rst_file
+    return yaml_file, rst_file
 
 
 rst_file_contents_class_width_children = '''
@@ -150,11 +149,11 @@ a child
          'ClassWithChildrenThatHaveSometimesNiceProperties',
          'obj = ClassWithChildrenThatHaveSometimesNiceProperties()']])
 def test_single_mod_doc(tmp_path, obj):
-    json_file, rst_file = config_doc_files(
+    yaml_file, rst_file = config_doc_files(
         tmp_path, obj, ['tree_config.tests.test_doc'])
-    json_doc = json.loads(json_file.read_text())
+    yaml_doc = yaml_loads(yaml_file.read_text())
 
-    assert json_doc == {
+    assert yaml_doc == {
         "tree_config.tests.test_doc."
         "ClassWithChildrenThatHaveSometimesNiceProperties": {
             "prop_c": [
@@ -178,12 +177,12 @@ def test_single_mod_doc(tmp_path, obj):
     rst_doc = rst_file.read_text().strip()
     assert rst_doc == rst_file_contents_class_width_children
 
-    # now update the json file by adding a new module
-    json_file, rst_file = config_doc_files(
+    # now update the yaml file by adding a new module
+    yaml_file, rst_file = config_doc_files(
         tmp_path, obj, ['tree_config.tests.doc_dummy_class'])
 
-    json_doc = json.loads(json_file.read_text())
-    assert json_doc == {
+    yaml_doc = yaml_loads(yaml_file.read_text())
+    assert yaml_doc == {
         "tree_config.tests.doc_dummy_class.RootClass": {
             "prop_z": [
                 "This is the very last property ever.",

@@ -10,7 +10,7 @@ attribute. Each of the properties listed there must be "Kivy" properties of
 that class.
 
 When generating docs, the documentation of these properties are dumped to
-a json file using :func:`create_doc_listener`.
+a yaml file using :func:`create_doc_listener`.
 
 Each app instance defines a application class based on
 :class:`~base_kivy_app.app.BaseKivyApp`. Using this classe's
@@ -19,7 +19,7 @@ of all classes used in the current app that requires configuration
 and :func:`write_config_props_rst` is used to combine all these docs
 and display them in a single place in the generated html pages.
 
-Similarly, when the app is run, a single json file is generated with all these
+Similarly, when the app is run, a single yaml file is generated with all these
 config values and is later read and is used to configure the app by the
 user. :attr:`~base_kivy_app.app.BaseKivyApp.app_settings` is where it's stored
 after reading. Each class is responsible for reading its configuration
@@ -39,7 +39,7 @@ Then, in the sphinx conf.py file do::
         import package
         from package import MyApp
         fname = os.environ.get(
-            'BASEKIVYAPP_CONFIG_DOC_PATH', 'config_attrs.json')
+            'BASEKIVYAPP_CONFIG_DOC_PATH', 'config_attrs.yaml')
         create_doc_listener(app, package, fname)
         if MyApp.get_running_app() is not None:
             classes = MyApp.get_running_app().get_config_instances()
@@ -51,26 +51,31 @@ Then, in the sphinx conf.py file do::
                 write_config_props_rst, classes, package, filename=fname)
         )
 
-and run `make html` twice. This will create the ``config_attrs.json`` file
+and run `make html` twice. This will create the ``config_attrs.yaml`` file
 and the config.rst file under source/. This
 config.rst should have been listed in the sphinx index so on the second run
 this file will be converted to html containing all the config tokens.
 
 You should similarly run doc generation for all packages the your package
-relies on so you get all their config options in ``config_attrs.json``
+relies on so you get all their config options in ``config_attrs.yaml``
 so they can be included in the docs.
 """
 
 from inspect import isclass
+import os.path
 from typing import Tuple, List, Dict, Any
 import operator
-import json
+import urllib.request
 from collections import deque
 
-from .utils import get_class_bases, get_class_annotations
+from .utils import get_class_bases, get_class_annotations, yaml_loads, \
+    yaml_dumps
 from tree_config import get_config_children_names
 
-__all__ = ('create_doc_listener', 'write_config_props_rst')
+__all__ = (
+    'create_doc_listener', 'write_config_props_rst', 'download_merge_yaml_doc',
+    'merge_yaml_doc',
+)
 
 
 def _get_config_children_objects(
@@ -122,7 +127,8 @@ def _get_config_prop_items_class(
     return classes
 
 
-def create_doc_listener(sphinx_app, package_name, filename):
+def create_doc_listener(
+        sphinx_app, package_name, filename, yaml_dump_str=yaml_dumps):
     """Creates a listener for the ``__config_props__`` attributes and dumps
     the docs of any props listed to ``filename``. If the file
     already exists, it extends it with new data and overwrites any exiting
@@ -135,14 +141,14 @@ def create_doc_listener(sphinx_app, package_name, filename):
             create_doc_listener(
                 app, package,
                 os.environ.get(
-                    'BASEKIVYAPP_CONFIG_DOC_PATH', 'config_attrs.json')
+                    'BASEKIVYAPP_CONFIG_DOC_PATH', 'config_attrs.yaml')
             )
 
     where ``package`` is the module for which the docs are generated.
     """
     try:
         with open(filename) as fh:
-            data = json.load(fh)
+            data = yaml_loads(fh.read())
     except IOError:
         data = {}
 
@@ -179,9 +185,7 @@ def create_doc_listener(sphinx_app, package_name, filename):
             name: props for name, props in filtered_data.items() if props}
 
         with open(filename, 'w') as fh_:
-            json.dump(
-                filtered_data, fh_, sort_keys=True, indent=4,
-                separators=(',', ': '))
+            fh_.write(yaml_dump_str(filtered_data))
 
     sphinx_app.connect('autodoc-process-docstring', config_attrs_doc_listener)
     sphinx_app.connect('build-finished', dump_config_attrs_doc)
@@ -225,7 +229,7 @@ def _get_config_attrs_doc(obj, filename, get_attr=getattr):
 
     # get the saved docs
     with open(filename) as fh:
-        docs = json.load(fh)
+        docs = yaml_loads(fh.read())
 
     # mapping of class name to a mapping of class props to their docs
     for level, name, obj, classes_props, props_docs in classes_flat:
@@ -299,3 +303,52 @@ ProjectApp.get_config_classes(), project_name))
 
     with open(rst_filename, 'w') as fh:
         fh.write(lines)
+
+
+def download_merge_yaml_doc(filename, url, out_filename):
+    with urllib.request.urlopen(url) as f:
+        remote = yaml_loads(f.read())
+
+    local = {}
+    if filename and os.path.exists(filename):
+        with open(filename) as f:
+            local = yaml_loads(f)
+
+    local.update(remote)
+    with open(out_filename, 'w') as f:
+        f.write(yaml_dumps(local))
+
+
+def merge_yaml_doc(filename1, filename2, out_filename):
+    with open(filename1) as f:
+        data = yaml_loads(f.read())
+
+    with open(filename2) as f:
+        data.update(yaml_loads(f.read()))
+
+    with open(out_filename, 'w') as f:
+        f.write(yaml_dumps(data))
+
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser(prog='Config Docs generation')
+    subparsers = parser.add_subparsers(dest='command')
+
+    download = subparsers.add_parser('download')
+    download.add_argument('-f', '--filename', default=None)
+    download.add_argument('-u', '--url', required=True)
+    download.add_argument('-o', '--out_filename', required=True)
+
+    download = subparsers.add_parser('merge')
+    download.add_argument('-f1', '--filename1', required=True)
+    download.add_argument('-f2', '--filename2', required=True)
+    download.add_argument('-o', '--out_filename', required=True)
+
+    args = parser.parse_args()
+
+    if args.command == 'download':
+        download_merge_yaml_doc(args.filename, args.url, args.out_filename)
+    elif args.command == 'merge':
+        merge_yaml_doc(args.filename1, args.filename2, args.out_filename)

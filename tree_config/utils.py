@@ -8,8 +8,8 @@ from ruamel.yaml import YAML
 from typing import Dict, Any
 
 __all__ = (
-    'yaml_dumps', 'yaml_loads', 'get_class_bases', 'get_class_annotations',
-    'class_property')
+    'get_yaml', 'yaml_dumps', 'yaml_loads', 'get_class_bases',
+    'get_class_annotations', 'class_property')
 
 
 def get_class_bases(cls):
@@ -37,7 +37,7 @@ def get_class_annotations(obj_or_cls) -> Dict[str, Any]:
 
 
 def get_yaml():
-    yaml = YAML()
+    yaml = YAML(typ='safe')
     return yaml
 
 

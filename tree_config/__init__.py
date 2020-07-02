@@ -67,7 +67,12 @@ class Configurable:
 
 
 def get_config_prop_items(obj_or_cls, get_attr=getattr) -> Dict[str, Any]:
-    return {prop: get_attr(obj_or_cls, prop)
+    get_config_property = getattr(obj_or_cls, 'get_config_property', None)
+    if get_config_property is None or isclass(obj_or_cls):
+        return {prop: get_attr(obj_or_cls, prop)
+                for prop in get_config_prop_names(obj_or_cls)}
+
+    return {prop: get_config_property(prop)
             for prop in get_config_prop_names(obj_or_cls)}
 
 
@@ -199,35 +204,43 @@ def apply_config(obj, config: dict, get_attr=getattr, set_attr=setattr):
         post_config_applied()
 
 
-def read_config_from_file(filename):
+def read_config_from_file(filename, yaml_load_str=yaml_loads):
     """Reads the config file and loads all the config data.
 
     The config data is returned as a dict. If there's an error, an empty dict
     is returned.
     """
     with open(filename) as fh:
-        opts = yaml_loads(fh.read())
+        opts = yaml_load_str(fh.read())
     if opts is None:
         opts = {}
     return opts
 
 
-def load_config(obj, filename, get_attr=getattr):
+def load_config(
+        obj, filename, get_attr=getattr, yaml_dump_str=yaml_dumps,
+        yaml_load_str=yaml_loads):
     if not os.path.exists(filename):
-        dump_config(filename, read_config_from_object(obj, get_attr))
+        dump_config(
+            filename, read_config_from_object(obj, get_attr),
+            yaml_dump_str=yaml_dump_str)
 
-    return read_config_from_file(filename)
+    return read_config_from_file(filename, yaml_load_str=yaml_load_str)
 
 
-def dump_config(filename, data):
+def dump_config(filename, data, yaml_dump_str=yaml_dumps):
     with open(filename, 'w') as fh:
-        fh.write(yaml_dumps(data))
+        fh.write(yaml_dump_str(data))
 
 
-def load_apply_save_config(obj, filename, get_attr=getattr, set_attr=setattr):
-    config = load_config(obj, filename, get_attr)
+def load_apply_save_config(
+        obj, filename, get_attr=getattr, set_attr=setattr,
+        yaml_dump_str=yaml_dumps, yaml_load_str=yaml_loads):
+    config = load_config(
+        obj, filename, get_attr, yaml_dump_str=yaml_dump_str,
+        yaml_load_str=yaml_load_str)
     apply_config(obj, config, get_attr, set_attr)
 
     config = read_config_from_object(obj, get_attr)
-    dump_config(filename, config)
+    dump_config(filename, config, yaml_dump_str=yaml_dump_str)
     return config
