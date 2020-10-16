@@ -3,7 +3,7 @@ tree-config
 
 Configuration of objects that are nested in a tree-like fashion.
 
-For more information: http://matham.github.io/tree-config/index.html
+For more information: https://matham.github.io/tree-config/index.html
 
 
 .. image:: https://coveralls.io/repos/github/matham/tree-config/badge.svg?branch=master

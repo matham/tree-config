@@ -90,7 +90,7 @@ jobs:
           KIVY_DOC: 1
       run: |
         python3 -m pip install --upgrade pip virtualenv wheel setuptools sphinx
-        python3 -m pip install -e .[dev,network]
+        python3 -m pip install -e .[dev]
     - name: Generate docs
       run: |
         cd doc

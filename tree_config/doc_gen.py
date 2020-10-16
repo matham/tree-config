@@ -243,7 +243,7 @@ def _get_config_attrs_doc(obj, filename, get_attr=getattr):
 
 def write_config_props_rst(
         obj, project, app, exception, filename, rst_filename,
-        get_attr=getattr):
+        get_attr=getattr, yaml_dump_str=yaml_dumps):
     """Walks through all the configurable classes of this package
     (should be gotten from
     :meth:`~base_kivy_app.app.BaseKivyApp.get_config_classes` or
@@ -282,10 +282,18 @@ ProjectApp.get_config_classes(), project_name))
             lines.append('')
         for prop, (default, doc) in sorted(
                 props_docs.items(), key=operator.itemgetter(0)):
-            if isinstance(default, str):
-                lines.append('`{}`: "{}"'.format(prop, default))
-            else:
-                lines.append('`{}`: {}'.format(prop, default))
+
+            lines.append(f'`{prop}`:')
+
+            default = yaml_dump_str(default).strip().rstrip(' .\n\r')
+            default_lines = default.splitlines()
+            if len(default_lines):
+                lines.append(' Default value::')
+                lines.append('')
+                for line in default_lines:
+                    lines.append(f'  {line}')
+                lines.append('')
+
             while doc and not doc[-1].strip():
                 del doc[-1]
 
