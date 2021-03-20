@@ -6,7 +6,7 @@ objects to be configured are nested in a tree-like fashion such that they
 can be represented as nested dicts in e.g. a yaml file.
 """
 
-__version__ = '0.1.1.dev0'
+__version__ = '0.1.1'
 
 
 from typing import Tuple, List, Dict, Any
