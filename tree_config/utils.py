@@ -2,14 +2,54 @@
 ========
 
 """
+import functools
 from inspect import isclass
-from io import StringIO
-from ruamel.yaml import YAML
+import sys
+import types
 from typing import Dict, Any
+from tree_config.yaml import get_yaml, yaml_loads, yaml_dumps
+try:
+    from inspect import get_annotations
+except ImportError:
+    def get_annotations(cls, eval_str):
+        obj_dict = getattr(cls, '__dict__', None)
+        if obj_dict and hasattr(obj_dict, 'get'):
+            ann = obj_dict.get('__annotations__', None)
+            if isinstance(ann, types.GetSetDescriptorType):
+                ann = None
+        else:
+            ann = None
+        ann = dict(ann) if ann else {}
+
+        if eval_str:
+            globals = None
+            module_name = getattr(cls, '__module__', None)
+            if module_name:
+                module = sys.modules.get(module_name, None)
+                if module:
+                    globals = getattr(module, '__dict__', None)
+            locals = dict(vars(cls))
+
+            unwrap = cls
+            while True:
+                if hasattr(unwrap, '__wrapped__'):
+                    unwrap = unwrap.__wrapped__
+                    continue
+                if isinstance(unwrap, functools.partial):
+                    unwrap = unwrap.func
+                    continue
+                break
+            if hasattr(unwrap, "__globals__"):
+                globals = unwrap.__globals__
+
+            for key, value in ann.items():
+                if isinstance(value, str):
+                    ann[key] = eval(value, globals, locals)
+
+        return ann
 
 __all__ = (
-    'get_yaml', 'yaml_dumps', 'yaml_loads', 'get_class_bases',
-    'get_class_annotations', 'class_property')
+    'get_class_bases', 'get_class_annotations', 'class_property')
 
 
 def get_class_bases(cls):
@@ -32,25 +72,8 @@ def get_class_annotations(obj_or_cls) -> Dict[str, Any]:
 
     annotations = {}
     for c in [cls] + list(get_class_bases(cls)):
-        annotations.update(getattr(c, '__annotations__', {}))
+        annotations.update(get_annotations(c, eval_str=True))
     return annotations
-
-
-def get_yaml():
-    yaml = YAML(typ='safe')
-    return yaml
-
-
-def yaml_dumps(value, get_yaml_obj=get_yaml):
-    yaml = get_yaml_obj()
-    s = StringIO()
-    yaml.dump(value, s)
-    return s.getvalue()
-
-
-def yaml_loads(value, get_yaml_obj=get_yaml):
-    yaml = get_yaml_obj()
-    return yaml.load(value)
 
 
 class class_property(property):

@@ -13,8 +13,7 @@ from typing import Tuple, List, Dict, Any
 import os
 from inspect import isclass
 
-from .utils import get_class_bases, yaml_dumps, yaml_loads, \
-    get_class_annotations, class_property
+from .utils import get_class_bases, yaml_dumps, yaml_loads, class_property
 
 __all__ = (
     'Configurable', 'read_config_from_object', 'apply_config',
