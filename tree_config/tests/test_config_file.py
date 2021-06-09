@@ -129,3 +129,51 @@ def test_load_apply_save_config(tmp_path):
     load_apply_save_config(obj, f)
     assert obj.child_a.prop_a == 554
     assert obj.prop_c == 856
+
+
+def test_prop_created_init(tmp_path):
+    class Config:
+
+        _config_props_ = ('name', )
+
+        def __init__(self):
+            self.name = 'tree'
+
+    obj = Config()
+    obj.name = 'table'
+
+    f = str(tmp_path / 'config.yaml')
+    load_apply_save_config(obj, f)
+
+    obj = Config()
+    assert obj.name == 'tree'
+
+    load_apply_save_config(obj, f)
+    assert obj.name == 'table'
+
+
+def test_child_created_init(tmp_path):
+    class Config:
+
+        _config_children_ = {'device': 'device'}
+
+        def __init__(self):
+            self.device = Device()
+
+    class Device:
+
+        _config_props_ = ('name', )
+
+        name = 'tree'
+
+    obj = Config()
+    obj.device.name = 'table'
+
+    f = str(tmp_path / 'config.yaml')
+    load_apply_save_config(obj, f)
+
+    obj = Config()
+    assert obj.device.name == 'tree'
+
+    load_apply_save_config(obj, f)
+    assert obj.device.name == 'table'
