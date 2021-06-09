@@ -94,9 +94,10 @@ def _get_config_prop_names(obj_or_cls) -> List[str]:
             if prop in props:
                 continue
 
-            if not hasattr(cls, prop):
-                raise Exception('Missing attribute <{}> in <{}>'.
-                                format(prop, cls.__name__))
+            if not hasattr(obj_or_cls, prop):
+                raise Exception(
+                    f'Missing attribute <{prop}> from <{obj_or_cls}> '
+                    f'in <{cls}>')
             props[prop] = None
 
     return list(props)
@@ -128,9 +129,10 @@ def _get_config_children_names(obj_or_cls) -> Dict[str, str]:
             if name in children:
                 continue
 
-            if not hasattr(cls, prop):
-                raise Exception('Missing attribute <{}> in <{}>'.
-                                format(prop, cls.__name__))
+            if not hasattr(obj_or_cls, prop):
+                raise Exception(
+                    f'Missing attribute <{prop}> from <{obj_or_cls}> '
+                    f'in <{cls}>')
             children[name] = prop
 
     return children
