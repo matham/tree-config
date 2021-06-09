@@ -113,17 +113,29 @@ be configured by changing appropriate values in the ``config.yaml`` settings \
 file. The options default to the default value of the classes for each of the \
 options.
 
-`prop_c`: 3
+`prop_c`:
+ Default value::
+
+  3
+
  This is truly a nicely done property
 
 
 b child
 -------
 
-`prop_a`: 1
+`prop_a`:
+ Default value::
+
+  1
+
  A very nice property.
 
-`prop_b`: 2
+`prop_b`:
+ Default value::
+
+  2
+
  Can be a nice property.
  Sometimes it isn't nice though.
 
@@ -131,10 +143,18 @@ b child
 a child
 -------
 
-`prop_a`: 1
+`prop_a`:
+ Default value::
+
+  1
+
  A very nice property.
 
-`prop_b`: 2
+`prop_b`:
+ Default value::
+
+  2
+
  Can be a nice property.
  Sometimes it isn't nice though.
  '''.strip()
