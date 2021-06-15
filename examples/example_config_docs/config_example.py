@@ -1,9 +1,7 @@
 """Example used to extract doc strings into a rst file for the configurable
 properties.
 
-Do:
-
-.. code-block:: shell
+Do::
 
     echo $'Config\n===========' > source/config.rst
     make html

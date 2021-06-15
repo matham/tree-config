@@ -35,20 +35,41 @@ Configuration usage
 
 ``tree-config`` can dump all the configurable properties of all your classes to
 a yaml file and then load the the file and restore/apply the values to the
-properties.
+properties. E.g.:
+
+.. code-block:: python
+
+    class App:
+
+        _config_props_ = ('name', )
+
+        _config_children_ = {'app panel': 'panel'}
+
+        def __init__(self):
+            self.name = 'Desk'
+            self.panel = AppPanel()
+
+    class AppPanel:
+
+        _config_props_ = ('color', )
+
+        color = 'A4FF67'
+
+will automatically configure ``name`` and ``color``.
 
 Following is a guide by example of the multiples ways to control the configuration.
 See the `configuration API <https://matham.github.io/tree-config/api.html>`_, including
 the ``Configuration`` class for complete details.
 
-See the examples directory for complete runnable code of the following examples.
+See the examples directory in the repo for complete runnable code of the following
+examples.
 
 Basic properties
 ----------------
 
-This example has an app class that contains two panels - they all require configuration.
-``_config_props_`` lists the configurable properties of each class, while
-``_config_children_`` constructs the configuration tree.
+This example has an app class that contains two panels that are configurable.
+``_config_props_`` lists the configurable properties for the class, while
+``_config_children_`` constructs the tree of objects that are configurable.
 
 .. code-block:: python
 
@@ -117,7 +138,7 @@ instances. When ``tree-config`` uses them, it will walk the whole class
 hierarchy and accumulate their values from all super classes because a
 sub-class does not overwrite them, but rather adds to them.
 
-Instead, if ``_config_props`` and/or ``_config_children`` is defined on a
+If ``_config_props`` and/or ``_config_children`` is defined on a
 class or instance, tree-config will use that value directly, instead of
 walking ``_config_props_`` and/or ``_config_children_``, respectively.
 
@@ -188,8 +209,8 @@ of both ``RootPanel`` and ``AppPanel``, while ``home panel`` only has the
 properties listed in ``_config_props``. ``_config_children`` behaves
 similarly.
 
-Custom values
--------------
+Custom values hooks
+-------------------
 
 We may wish to hook the property getting/setting process to
 change the value before it is saved or before it is applied again.
@@ -260,12 +281,12 @@ See also ``apply_config_child`` for similarly hooking into applying the children
 objects. The default, when not provided is to use ``apply_config``, so if
 overriding, that should probably also be used for the base case.
 
-Custom tags
-^^^^^^^^^^^
+Custom tags (pickling)
+^^^^^^^^^^^^^^^^^^^^^^
 
-Yaml offers support for representing objects using custom tags. This enables
-global support for custom objects, without having to use ``get_config_property`` /
-``apply_config_property``.
+Yaml offers support for representing arbitrary objects using custom tags in the
+file. This enables global support for the objects, without having to use
+``get_config_property`` / ``apply_config_property`` wherever they are used.
 
 Using the point example above:
 
@@ -280,15 +301,15 @@ Using the point example above:
 
     yaml_tag = '!tree_config_example_point'
 
-
+    # encoder
     def _represent_point(representer: BaseRepresenter, val):
         return representer.represent_sequence(yaml_tag, tuple(val))
 
-
+    # decoder
     def _construct_point(constructor: BaseConstructor, tag, node):
         return Point(*constructor.construct_sequence(node))
 
-
+    # tell yaml how to represent a Point
     def register_point_yaml_support() -> None:
         BaseRepresenter.add_multi_representer(Point, _represent_point)
         BaseConstructor.add_multi_constructor(yaml_tag, _construct_point)
@@ -392,7 +413,7 @@ prints the following::
 Configurable class
 ------------------
 
-The above examples used a duck typing approach to these special configuration
+The above examples used a duck typing approach to these special configuration/hook
 methods, and any/all of these methods were optional. tree-config also offers a
 ``Configurable`` superclass that defines all these methods with appropriate
 default values.
@@ -409,6 +430,8 @@ Auto docs
 In addition to configuration, tree-config can also hook into the sphinx doc
 generating build steps and generate docs listing all the properties that
 can be configured by the application and show the doc string for each of them.
+This is helpful to users who want to configure these properties using the
+configuration yaml file.
 
 The example directory has a complete doc example.
 
@@ -483,7 +506,7 @@ then, we add the following to the top of the ``conf.py`` file:
     from tree_config.doc_gen import create_doc_listener, write_config_props_rst
 
 the exact path added to ``sys.path`` depends on where the code is, or if it's a python
-package, that is not needed because it's already installed.
+package that is not needed because it's already installed.
 
 We also need to add ``'sphinx.ext.autodoc'`` to the list of extensions. Finally,
 at the end of ``conf.py`` add:
@@ -491,20 +514,22 @@ at the end of ``conf.py`` add:
 .. code-block:: python
 
     def setup(app):
-        # dump all config_example config docstrings to config_prop_docs.yaml
+        # dump all config_example package/subpackages config docstrings to config_prop_docs.yaml
         create_doc_listener(app, 'config_example', 'config_prop_docs.yaml')
 
-        # get docstrings from yaml and config properties from App and
-        # dump to source/config.rst
+        # then get docstrings from yaml file, walk all config properties from App and
+        # dump formatted config docs to source/config.rst
         app.connect(
             'build-finished', partial(
                 write_config_props_rst, App, 'config_example',
                 filename='config_prop_docs.yaml', rst_filename='source/config.rst')
         )
 
-Finally, to the sphinx generated ``index.rst`` we added ``config.rst``.
-We also need to add somewhere auto-doc generating rst for all the
-classes, otherwise we won't get the relevant docstrings. We added it as:
+Finally, to the sphinx generated ``index.rst`` we added ``config.rst`` (the filename
+of the file that will be automatically created under source).
+We also need to add somewhere in the index or files it references the auto-doc
+references for all the classes, otherwise we won't get the relevant docstrings.
+We added it as:
 
 .. code-block:: rst
 
@@ -532,8 +557,8 @@ Finally, we run:
     make html
 
 First we created a mostly empty config.rst file. Otherwise sphinx doesn't
-include it when it is generated. Next we ran ``make html`` twice, first to generate
-the following ``config_prop_docs.yaml`` file:
+include it when it is generated. Next we ran ``make html`` twice, the first
+time it automatically generates the following ``config_prop_docs.yaml`` file:
 
 .. code-block:: yaml
 
@@ -599,15 +624,61 @@ uses that create ``config.rst`` with the following contents:
 
      Color of the app.
 
-This rst is automatically rendered by sphinx to nice html with the rest of the docs.
+This rst is automatically rendered by sphinx to nice html with the rest of the docs and
+it looks something like:
+
+----
+
+.. raw:: html
+
+    <h1>CONFIG_EXAMPLE Config</h1>
+    <p>The following are the configuration options provided by the app. It can be configured by changing appropriate values in the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> settings file. The options default to the default value of the classes for each of the options.</p>
+    <dl>
+    <dt><cite>name</cite>:</dt><dd><p>Default value:</p>
+    <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;&#39;</span>
+    </pre></div>
+    </div>
+    <p>Some name.</p>
+    </dd>
+    <dt><cite>size</cite>:</dt><dd><p>Default value:</p>
+    <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">55</span>
+    </pre></div>
+    </div>
+    <p>Some filename.</p>
+    </dd>
+    </dl>
+    <div class="section" id="home-panel">
+    <h2>home panel</h2>
+    <dl>
+    <dt><cite>shape</cite>:</dt><dd><p>Default value:</p>
+    <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;&#39;</span>
+    </pre></div>
+    </div>
+    <p>Shape of the home.</p>
+    </dd>
+    </dl>
+    </div>
+    <div class="section" id="app-panel">
+    <h2>app panel</h2>
+    <dl>
+    <dt><cite>color</cite>:</dt><dd><p>Default value:</p>
+    <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;&#39;</span>
+    </pre></div>
+    </div>
+    <p>Color of the app.</p>
+    </dd>
+    </dl>
+    </div>
+
+----
 
 Class vs instance
 -----------------
 
-The configuration examples above save the config from the App instance.
-One can also use the App class to dump the yaml. The major difference is that the
+The configuration examples above save the config from the App *instance*.
+One can also use the App *class* to dump the yaml. The major difference is that the
 ``apply_config_child``, ``get_config_property``, ``apply_config_property``,
-and ``post_config_applied``, which are instance methods, are skipped and
+and ``post_config_applied`` methods, which are instance methods, are skipped and
 not used.
 
 Also, unlike for instances, where it would fail if ``_config_children_`` lists
@@ -615,22 +686,24 @@ a child property whose value is None, for the class it will fallback on the type
 hint of the property, if one is defined.
 
 Using the ``App`` class, rather than a ``App()`` instance is helpful during doc
-building when it may not be possible to instantiate the full App.
+building when it may not be possible to instantiate the full App
+(see the docs example above that uses the class instance with type hints).
 
 Reusing other project docs
 --------------------------
 
 Because we rely on autodoc to generate ``config_prop_docs.yaml``, tree-config
-provides a mechanism to get reuse the docstrings from other projects we depend.
+provides a mechanism to reuse the docstrings from other projects we depend on.
 
 E.g. imagine we depend on ``remote1`` and ``remote2`` projects who defines classes
-that is configurable.
+that is configurable and our projects inherits and extends them with further
+configurable properties.
 Also assume these remote projects dumped their configurable docstrings to
 ``config_prop_docs.yaml`` like in the example and made it available in the
 root of their sphinx generated docs e.g. on github-pages.
 
 Then, tree-config provides tools to merge those docstrings into ours to be able
-to create ``config.rst`` as follows:
+to create ``config.rst`` from them as follows:
 
 .. code-block:: shell
 
@@ -642,4 +715,5 @@ to create ``config.rst`` as follows:
     make html
     make html
 
-This downloads and merges the yaml files and generates the ``config.rst``.
+This downloads and merges the yaml files from our dependencies, adds to it our own
+docs, and generates the ``config.rst``.

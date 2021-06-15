@@ -1,64 +1,20 @@
 """Documentation generation
 ============================
 
-Overview
----------
+When generating docs, the documentation of the properties listed in
+``__config_props__`` can dumped to a yaml file using
+:func:`create_doc_listener`.
 
-Configuration works as follows. Each class that has configuration attributes
-must list these attributes in a list in the class ``__config_props__``
-attribute. Each of the properties listed there must be "Kivy" properties of
-that class.
+:func:`write_config_props_rst` can load the docstrings from this yaml file
+and then generate a nicely formatted rst file listing all the configurable
+properties of the project. See the user guide for details and complete examples.
 
-When generating docs, the documentation of these properties are dumped to
-a yaml file using :func:`create_doc_listener`.
+Command line
+------------
 
-Each app instance defines a application class based on
-:class:`~base_kivy_app.app.BaseKivyApp`. Using this classe's
-:meth:`~base_kivy_app.app.BaseKivyApp.get_config_classes` method we get a list
-of all classes used in the current app that requires configuration
-and :func:`write_config_props_rst` is used to combine all these docs
-and display them in a single place in the generated html pages.
-
-Similarly, when the app is run, a single yaml file is generated with all these
-config values and is later read and is used to configure the app by the
-user. :attr:`~base_kivy_app.app.BaseKivyApp.app_settings` is where it's stored
-after reading. Each class is responsible for reading its configuration
-from there.
-
-Usage
------
-
-When creating an app, ensure that the app
-inherited from :class:`~base_kivy_app.app.BaseKivyApp` overwrites the
-:meth:`~base_kivy_app.app.BaseKivyApp.get_config_classes` method
-returning all the classes that need configuration.
-
-Then, in the sphinx conf.py file do::
-
-    def setup(app):
-        import package
-        from package import MyApp
-        fname = os.environ.get(
-            'BASEKIVYAPP_CONFIG_DOC_PATH', 'config_attrs.yaml')
-        create_doc_listener(app, package, fname)
-        if MyApp.get_running_app() is not None:
-            classes = MyApp.get_running_app().get_config_instances()
-        else:
-            classes = MyApp.get_config_classes()
-
-        app.connect(
-            'build-finished', partial(
-                write_config_props_rst, classes, package, filename=fname)
-        )
-
-and run `make html` twice. This will create the ``config_attrs.yaml`` file
-and the config.rst file under source/. This
-config.rst should have been listed in the sphinx index so on the second run
-this file will be converted to html containing all the config tokens.
-
-You should similarly run doc generation for all packages the your package
-relies on so you get all their config options in ``config_attrs.yaml``
-so they can be included in the docs.
+This module provides two command line options that can call either
+:func:`download_merge_yaml_doc` or :func:`merge_yaml_doc` and forwards the
+arguments to these functions. See the guide for examples.
 """
 
 from inspect import isclass
@@ -130,21 +86,19 @@ def _get_config_prop_items_class(
 def create_doc_listener(
         sphinx_app, package_name, filename, yaml_dump_str=yaml_dumps):
     """Creates a listener for the ``__config_props__`` attributes and dumps
-    the docs of any props listed to ``filename``. If the file
+    the docs of any props listed, to ``filename``. If the file
     already exists, it extends it with new data and overwrites any exiting
     properties that we see again in this run.
 
-    To use, in the sphinx conf.py file do::
+    To use, in the sphinx conf.py file do something like::
 
         def setup(app):
             import package
-            create_doc_listener(
-                app, package,
-                os.environ.get(
-                    'BASEKIVYAPP_CONFIG_DOC_PATH', 'config_attrs.yaml')
-            )
+            create_doc_listener(app, package, 'config_attrs.yaml')
 
-    where ``package`` is the module for which the docs are generated.
+    where ``package`` is the package for which the docs are generated.
+
+    See the guide for a full example.
     """
     try:
         with open(filename) as fh:
@@ -244,21 +198,24 @@ def _get_config_attrs_doc(obj, filename, get_attr=getattr):
 def write_config_props_rst(
         obj, project, app, exception, filename, rst_filename,
         get_attr=getattr, yaml_dump_str=yaml_dumps):
-    """Walks through all the configurable classes of this package
-    (should be gotten from
-    :meth:`~base_kivy_app.app.BaseKivyApp.get_config_classes` or
-    :meth:`~base_kivy_app.app.BaseKivyApp.get_config_instances`) and loads the
-    docs of those properties and generates a rst output file with all the
-    tokens.
+    """Walks through all the configurable classes of ``obj``, recursively
+    by looking at ``_config_props_`` and ``_config_children_`` and using the
+    type hints of these children properties if they are None (e.g. if obj is a
+    class). For each property it loads their docs from the yaml file
+    ``filename`` and it generates a rst output file at ``rst_filename`` with
+    all the tokens.
 
     For example in the sphinx conf.py file do::
 
         def setup(app):
             app.connect('build-finished', partial(write_config_props_rst, \
-ProjectApp.get_config_classes(), project_name))
+ProjectApp, project_name, filename='config_prop_docs.yaml', \
+rst_filename='source/config.rst'))
 
-    where project_name is the project module and ProjectApp is the App of the
-    package.
+    where project_name is the name of project and ProjectApp is the App of the
+    package the contains all the configurable objects.
+
+    See the guide for a complete example.
     """
     headings = [
         '-', '`', ':', "'", '"', '~', '^', '_', '*', '+', '#', '<', '>']
@@ -314,6 +271,31 @@ ProjectApp.get_config_classes(), project_name))
 
 
 def download_merge_yaml_doc(filename, url, out_filename):
+    """Downloads a yaml file with previously saved configurable properties
+    docstrings, optionally merges it with an existing docstrings yaml file, and
+    outputs the merged yaml file. See the guide for an example.
+
+    :param filename: The optional yaml filename into which to merge the remote
+        yaml docstrings.
+    :param url: A url to a docstrings containing yaml file that will be
+        downloaded and optionally merged into ``filename`` and output to
+        ``out_filename``.
+    :param out_filename: The filename of the output yaml file.
+
+    On the command line it's invocated as::
+
+        $ python -m tree_config.doc_gen download --help
+        usage: Config Docs generation download [-h] [-f FILENAME] -u URL -o
+                                               OUT_FILENAME
+
+        optional arguments:
+          -h, --help            show this help message and exit
+          -f FILENAME, --filename FILENAME
+                                The optional yaml filename with which to merge
+                                the downloaded file.
+          -u URL, --url URL
+          -o OUT_FILENAME, --out_filename OUT_FILENAME
+    """
     with urllib.request.urlopen(url) as f:
         remote = yaml_loads(f.read())
 
@@ -328,6 +310,25 @@ def download_merge_yaml_doc(filename, url, out_filename):
 
 
 def merge_yaml_doc(filename1, filename2, out_filename):
+    """Merges two yaml files containing configurable properties docstrings into
+    a single output yaml file.
+
+    :param filename1: First yaml input filename into which the second is merged.
+    :param filename2: Second yaml input filename.
+    :param out_filename: The output filename of the resulting yaml file.
+
+    On the command line it's invocated as::
+
+        $ python -m tree_config.doc_gen merge --help
+        usage: Config Docs generation merge [-h] -f1 FILENAME1 -f2 FILENAME2 -o
+                                            OUT_FILENAME
+
+        optional arguments:
+          -h, --help            show this help message and exit
+          -f1 FILENAME1, --filename1 FILENAME1
+          -f2 FILENAME2, --filename2 FILENAME2
+          -o OUT_FILENAME, --out_filename OUT_FILENAME
+    """
     with open(filename1) as f:
         data = yaml_loads(f.read())
 
@@ -344,12 +345,21 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='Config Docs generation')
     subparsers = parser.add_subparsers(dest='command')
 
-    download = subparsers.add_parser('download')
-    download.add_argument('-f', '--filename', default=None)
+    download = subparsers.add_parser(
+        'download',
+        help='Runs download_merge_yaml_doc to download the yaml file, merge '
+             'it with filename, and outputs the result.')
+    download.add_argument(
+        '-f', '--filename', default=None,
+        help='The optional yaml filename with which to merge the downloaded '
+             'file.')
     download.add_argument('-u', '--url', required=True)
     download.add_argument('-o', '--out_filename', required=True)
 
-    download = subparsers.add_parser('merge')
+    download = subparsers.add_parser(
+        'merge',
+        help='Merge the two yaml file containing the docstrings into a '
+             'single file.')
     download.add_argument('-f1', '--filename1', required=True)
     download.add_argument('-f2', '--filename2', required=True)
     download.add_argument('-o', '--out_filename', required=True)

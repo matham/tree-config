@@ -6,12 +6,13 @@ import functools
 from inspect import isclass
 import sys
 import types
-from typing import Dict, Any
+from typing import Dict, Any, Type, Generator, Union
 from tree_config.yaml import get_yaml, yaml_loads, yaml_dumps
 try:
     from inspect import get_annotations
 except ImportError:
     def get_annotations(cls, eval_str):
+        # copied from inspect
         obj_dict = getattr(cls, '__dict__', None)
         if obj_dict and hasattr(obj_dict, 'get'):
             ann = obj_dict.get('__annotations__', None)
@@ -52,10 +53,9 @@ __all__ = (
     'get_class_bases', 'get_class_annotations', 'class_property')
 
 
-def get_class_bases(cls):
-    """Gets all the base-classes of the class.
-    :param cls:
-    :return:
+def get_class_bases(cls: Type) -> Generator[Type, None, None]:
+    """Yields all the base-classes of the class, not including the passed class
+    or object.
     """
     for base in cls.__bases__:
         if base.__name__ == 'object':
@@ -65,7 +65,11 @@ def get_class_bases(cls):
         yield base
 
 
-def get_class_annotations(obj_or_cls) -> Dict[str, Any]:
+def get_class_annotations(obj_or_cls: Union[Any, Type[Any]]) -> Dict[str, Any]:
+    """Gets a dict of all the annotations of the object/class, including from
+    all superclasses. The values are actual object, even if the type is given
+    as a string (for forward declarations).
+    """
     cls = obj_or_cls
     if not isclass(obj_or_cls):
         cls = obj_or_cls.__class__
@@ -77,5 +81,9 @@ def get_class_annotations(obj_or_cls) -> Dict[str, Any]:
 
 
 class class_property(property):
+    """Can be used as ``@class_property`` on a method to make it a class
+     property in the same way ``@property`` can be used on a normal method
+     to make it a object property.
+    """
     def __get__(self, cls, owner):
         return classmethod(self.fget).__get__(None, owner)()
