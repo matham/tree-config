@@ -15,10 +15,10 @@ setup(
     name='tree-config',
     version=__version__,
     author='Matthew Einhorn',
-    author_email='moiein2000@gmail.com',
+    author_email='matt@einhorn.dev',
     license='MIT',
     description=(
-        'Configuration of objects that are nested in a tree-like fashion.'),
+        'Automatic app configuration of app objects.'),
     long_description=long_description,
     url=URL,
     classifiers=[
@@ -26,6 +26,8 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
     ],
     packages=find_packages(),
     project_urls={

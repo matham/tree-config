@@ -19,6 +19,7 @@ from inspect import isclass
 from .utils import get_class_bases, yaml_dumps, yaml_loads, class_property
 
 __all__ = (
+    '__version__',
     'Configurable', 'load_apply_save_config', 'read_config_from_object',
     'read_config_from_file', 'apply_config', 'load_config', 'dump_config',
     'get_config_prop_names', 'get_config_prop_items',

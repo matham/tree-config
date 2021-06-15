@@ -13,7 +13,7 @@ For more information: https://matham.github.io/tree-config/index.html
     :target: https://pypi.python.org/pypi/tree-config/
     :alt: Latest Version on PyPI
 
-.. image:: https://coveralls.io/repos/github/matham/tree-config/badge.svg?branch=master
+.. image:: https://coveralls.io/repos/github/matham/tree-config/badge.svg?branch=main
     :target: https://coveralls.io/github/matham/tree-config?branch=main
     :alt: Coverage status
 

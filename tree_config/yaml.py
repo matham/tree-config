@@ -162,7 +162,7 @@ def register_kivy_yaml_support() -> None:
 
 
 def _represent_path(representer: SafeRepresenter, val):
-    return representer.represent_scalar(f'!tree_path', str(val))
+    return representer.represent_scalar('!tree_path', str(val))
 
 
 def _path_constructor(constructor: BaseConstructor, tag_suffix, node):
