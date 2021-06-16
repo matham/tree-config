@@ -629,46 +629,46 @@ it looks something like:
 
 ----
 
-.. raw:: html
+CONFIG_EXAMPLE Config
+=====================
 
-    <h1>CONFIG_EXAMPLE Config</h1>
-    <p>The following are the configuration options provided by the app. It can be configured by changing appropriate values in the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> settings file. The options default to the default value of the classes for each of the options.</p>
-    <dl>
-    <dt><cite>name</cite>:</dt><dd><p>Default value:</p>
-    <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;&#39;</span>
-    </pre></div>
-    </div>
-    <p>Some name.</p>
-    </dd>
-    <dt><cite>size</cite>:</dt><dd><p>Default value:</p>
-    <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">55</span>
-    </pre></div>
-    </div>
-    <p>Some filename.</p>
-    </dd>
-    </dl>
-    <div class="section" id="home-panel">
-    <h2>home panel</h2>
-    <dl>
-    <dt><cite>shape</cite>:</dt><dd><p>Default value:</p>
-    <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;&#39;</span>
-    </pre></div>
-    </div>
-    <p>Shape of the home.</p>
-    </dd>
-    </dl>
-    </div>
-    <div class="section" id="app-panel">
-    <h2>app panel</h2>
-    <dl>
-    <dt><cite>color</cite>:</dt><dd><p>Default value:</p>
-    <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;&#39;</span>
-    </pre></div>
-    </div>
-    <p>Color of the app.</p>
-    </dd>
-    </dl>
-    </div>
+The following are the configuration options provided by the app. It can be configured by changing appropriate values in the ``config.yaml`` settings file. The options default to the default value of the classes for each of the options.
+
+`name`:
+ Default value::
+
+  ''
+
+ Some name.
+
+`size`:
+ Default value::
+
+  55
+
+ Some filename.
+
+
+home panel
+----------
+
+`shape`:
+ Default value::
+
+  ''
+
+ Shape of the home.
+
+
+app panel
+---------
+
+`color`:
+ Default value::
+
+  ''
+
+ Color of the app.
 
 ----
 
