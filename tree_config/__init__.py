@@ -16,7 +16,8 @@ import os
 from pathlib import Path
 from inspect import isclass
 
-from .utils import get_class_bases, yaml_dumps, yaml_loads, class_property
+from .yaml import yaml_dumps, yaml_loads
+from .utils import get_class_bases, class_property
 
 __all__ = (
     '__version__',

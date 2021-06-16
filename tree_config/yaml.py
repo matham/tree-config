@@ -59,11 +59,6 @@ def yaml_loads(value: str, get_yaml_obj: Callable[[], YAML] = get_yaml) -> Any:
     return yaml.load(value)
 
 
-def _represent_torch(representer: Representer, val):
-    return representer.represent_sequence(
-        f'!tree_torch_{val.dtype}', val.tolist())
-
-
 def _represent_numpy_array(representer: Representer, val):
     return representer.represent_sequence(
         f'!tree_numpy_array_{val.dtype.str}', val.tolist())
@@ -77,7 +72,8 @@ def _represent_numpy_number(representer: Representer, val):
 def _numpy_array_constructor(constructor: BaseConstructor, tag_suffix, node):
     import numpy
     return numpy.asarray(
-        constructor.construct_sequence(node), dtype=numpy.dtype(tag_suffix))
+        constructor.construct_sequence(node, deep=True),
+        dtype=numpy.dtype(tag_suffix))
 
 
 def _numpy_number_constructor(constructor: BaseConstructor, tag_suffix, node):
@@ -85,10 +81,28 @@ def _numpy_number_constructor(constructor: BaseConstructor, tag_suffix, node):
     return numpy.dtype(tag_suffix).type(constructor.construct_sequence(node)[0])
 
 
-def _get_torch_constructor(cls):
-    def load(constructor: BaseConstructor, node):
-        return cls(constructor.construct_sequence(node))
-    return load
+def _represent_torch(representer: Representer, val):
+    dtype = str(val.dtype)[6:]
+    if len(val.shape):
+        return representer.represent_sequence(
+            f'!tree_torch_array_{dtype}', val.tolist())
+
+    return representer.represent_sequence(
+        f'!tree_torch_num_{dtype}', (val.tolist(), ))
+
+
+def _torch_array_constructor(constructor: BaseConstructor, tag_suffix, node):
+    import torch
+    return torch.as_tensor(
+        constructor.construct_sequence(node, deep=True),
+        dtype=getattr(torch, tag_suffix))
+
+
+def _torch_num_constructor(constructor: BaseConstructor, tag_suffix, node):
+    import torch
+    return torch.as_tensor(
+        constructor.construct_sequence(node, deep=True)[0],
+        dtype=getattr(torch, tag_suffix))
 
 
 def register_torch_yaml_support() -> None:
@@ -100,28 +114,12 @@ def register_torch_yaml_support() -> None:
     constructed and returned.
     """
     import torch
-    tensors = {
-        'float': torch.FloatTensor,
-        'float32': torch.FloatTensor,
-        'double': torch.DoubleTensor,
-        'float64': torch.DoubleTensor,
-        'half': torch.HalfTensor,
-        'float16': torch.HalfTensor,
-        'uint8': torch.ByteTensor,
-        'int8': torch.CharTensor,
-        'short': torch.ShortTensor,
-        'int16': torch.ShortTensor,
-        'int': torch.IntTensor,
-        'int32': torch.IntTensor,
-        'long': torch.LongTensor,
-        'int64': torch.LongTensor,
-        'bool': torch.BoolTensor,
-    }
-    for dtype, cls in tensors.items():
-        tag = f'!tree_torch_{dtype}'
-        BaseConstructor.add_multi_constructor(tag, _get_torch_constructor(cls))
-
     BaseRepresenter.add_multi_representer(torch.Tensor, _represent_torch)
+
+    BaseConstructor.add_multi_constructor(
+        '!tree_torch_array_', _torch_array_constructor)
+    BaseConstructor.add_multi_constructor(
+        '!tree_torch_num_', _torch_num_constructor)
 
 
 def register_numpy_yaml_support() -> None:
