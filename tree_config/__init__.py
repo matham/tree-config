@@ -8,7 +8,7 @@ can be represented as nested dicts in e.g. a yaml file.
 See the guide for complete examples.
 """
 
-__version__ = '1.0.0.dev0'
+__version__ = '1.0.1'
 
 
 from typing import Tuple, List, Dict, Any, Union
