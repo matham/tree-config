@@ -307,7 +307,7 @@ def get_config_prop_names(obj_or_cls) -> List[str]:
         ['location', 'name']
     """
     props = getattr(obj_or_cls, '_config_props', None)
-    if props is not None:
+    if props is not None and not isclass(obj_or_cls):
         return props
     return _get_config_prop_names(obj_or_cls)
 
@@ -414,7 +414,7 @@ def get_config_children_names(obj_or_cls) -> Dict[str, str]:
         {'the box': 'box'}
     """
     children = getattr(obj_or_cls, '_config_children', None)
-    if children is not None:
+    if children is not None and not isclass(obj_or_cls):
         return children
     return _get_config_children_names(obj_or_cls)
 
