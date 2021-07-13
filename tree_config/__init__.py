@@ -138,31 +138,33 @@ class Configurable:
 
     _config_children_cache: Dict[str, str] = None
 
-    @class_property
-    def _config_props(cls) -> List[str]:
+    @property
+    def _config_props(self) -> List[str]:
         """A property, which if defined will be used to get all the configurable
         properties instead of using :attr:`_config_props_`. It returns the
         list of configurable properties like :attr:`_config_props_`.
 
         :meta public:
         """
+        cls = self.__class__
         props = cls.__dict__.get('_config_props_cache', None)
         if props is None:
-            cls._config_props_cache = props = _get_config_prop_names(cls)
+            cls._config_props_cache = props = _get_config_prop_names(self)
         return props
 
-    @class_property
-    def _config_children(cls) -> Dict[str, str]:
+    @property
+    def _config_children(self) -> Dict[str, str]:
         """A property, which if defined will be used to get all the configurable
         children instead of using :attr:`_config_children_`. It returns the
         dict of configurable children like :attr:`_config_children_`.
 
         :meta public:
         """
+        cls = self.__class__
         children = cls.__dict__.get('_config_children_cache', None)
         if children is None:
             cls._config_children_cache = children = _get_config_children_names(
-                cls)
+                self)
         return children
 
     def apply_config_child(
