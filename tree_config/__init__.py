@@ -510,7 +510,12 @@ def _apply_config_to_children(root_obj, children, config, get_attr, set_attr):
         # todo: handle when obj is a list/dict
         method = getattr(root_obj, 'apply_config_child', None)
         if method is None:
-            apply_config(obj, config[name], get_attr, set_attr)
+            prop_val = get_attr(root_obj, prop)
+            if isinstance(prop_val, (list, tuple)):
+                for config_val, config_obj in zip(config[name], prop_val):
+                    apply_config(config_obj, config_val, get_attr, set_attr)
+            else:
+                apply_config(obj, config[name], get_attr, set_attr)
         else:
             method(name, prop, obj, config[name])
 
@@ -531,6 +536,8 @@ def apply_config(
         object and its children. defaults to ``getattr``.
     :param set_attr: The function to use to set the property values for the
         object and its children. defaults to ``setattr``.
+
+    The object's config is applied before its children's config is applied.
 
     E.x.:
 
@@ -580,8 +587,6 @@ def apply_config(
     """
     # get all the configurable classes used by the obj
     children = get_config_children_items(obj, get_attr)
-    _apply_config_to_children(obj, children, config, get_attr, set_attr)
-
     used_keys = {s for name, prop, obj in children for s in (name, prop)}
 
     method = getattr(obj, 'apply_config_property', None)
@@ -593,6 +598,8 @@ def apply_config(
         for k, v in config.items():
             if k not in used_keys:
                 method(k, v)
+
+    _apply_config_to_children(obj, children, config, get_attr, set_attr)
 
     post_config_applied = getattr(obj, 'post_config_applied', None)
     if post_config_applied is not None:
