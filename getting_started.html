@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tree-config &mdash; tree-config  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Welcome to tree-config’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> tree-config
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tree-config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#configuration-usage">Configuration usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-properties">Basic properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hooking-property-discovery">Hooking property discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-values-hooks">Custom values hooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#custom-tags-pickling">Custom tags (pickling)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#post-applying-dispatch">Post-applying dispatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configurable-class">Configurable class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#auto-docs">Auto docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#config-example-config">CONFIG_EXAMPLE Config</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#home-panel">home panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#app-panel">app panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#class-vs-instance">Class vs instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reusing-other-project-docs">Reusing other project docs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tree-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>tree-config</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/getting_started.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tree-config">
+<h1>tree-config<a class="headerlink" href="#tree-config" title="Permalink to this headline"></a></h1>
+<p>Configuration of objects that are nested in a tree-like fashion.</p>
+<p>For more information: <a class="reference external" href="https://matham.github.io/tree-config/index.html">https://matham.github.io/tree-config/index.html</a></p>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/tree-config/"><img alt="Supported Python versions" src="https://img.shields.io/pypi/pyversions/tree-config.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/tree-config/"><img alt="Latest Version on PyPI" src="https://img.shields.io/pypi/v/tree-config.svg" /></a>
+<a class="reference external image-reference" href="https://coveralls.io/github/matham/tree-config?branch=main"><img alt="Coverage status" src="https://coveralls.io/repos/github/matham/tree-config/badge.svg?branch=main" /></a>
+<a class="reference external image-reference" href="https://github.com/matham/tree-config/actions"><img alt="Github action status" src="https://github.com/matham/tree-config/workflows/Python%20application/badge.svg" /></a>
+</section>
+<section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">tree-config</span></code> can be installed with:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install tree-config
+</pre></div>
+</div>
+</section>
+<section id="configuration-usage">
+<h1>Configuration usage<a class="headerlink" href="#configuration-usage" title="Permalink to this headline"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">tree-config</span></code> can dump all the configurable properties of all your classes to
+a yaml file and then load the the file and restore/apply the values to the
+properties. E.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">_config_children_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;app panel&#39;</span><span class="p">:</span> <span class="s1">&#39;panel&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Desk&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span> <span class="o">=</span> <span class="n">AppPanel</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">AppPanel</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;A4FF67&#39;</span>
+</pre></div>
+</div>
+<p>will automatically configure <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">color</span></code>.</p>
+<p>Following is a guide by example of the multiples ways to control the configuration.
+See the <a class="reference external" href="https://matham.github.io/tree-config/api.html">configuration API</a>, including
+the <code class="docutils literal notranslate"><span class="pre">Configuration</span></code> class for complete details.</p>
+<p>See the examples directory in the repo for complete runnable code of the following
+examples.</p>
+<section id="basic-properties">
+<h2>Basic properties<a class="headerlink" href="#basic-properties" title="Permalink to this headline"></a></h2>
+<p>This example has an app class that contains two panels that are configurable.
+<code class="docutils literal notranslate"><span class="pre">_config_props_</span></code> lists the configurable properties for the class, while
+<code class="docutils literal notranslate"><span class="pre">_config_children_</span></code> constructs the tree of objects that are configurable.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+
+    <span class="n">_config_children_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;app panel&#39;</span><span class="p">:</span> <span class="s1">&#39;panel1&#39;</span><span class="p">,</span> <span class="s1">&#39;home panel&#39;</span><span class="p">:</span> <span class="s1">&#39;panel2&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Desk&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel1</span> <span class="o">=</span> <span class="n">AppPanel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel2</span> <span class="o">=</span> <span class="n">HomePanel</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">AppPanel</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;A4FF67&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">HomePanel</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">shape</span> <span class="o">=</span> <span class="s1">&#39;circle&#39;</span>
+</pre></div>
+</div>
+<p>Then, running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tree_config</span> <span class="kn">import</span> <span class="n">dump_config</span><span class="p">,</span> <span class="n">read_config_from_object</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="n">dump_config</span><span class="p">(</span><span class="s1">&#39;basic_example.yaml&#39;</span><span class="p">,</span> <span class="n">read_config_from_object</span><span class="p">(</span><span class="n">app</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Shape is: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">panel2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>creates a <code class="docutils literal notranslate"><span class="pre">basic_example.yaml</span></code> file with the following contents:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">app panel</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="nv">A4FF67</span><span class="p p-Indicator">}</span><span class="w"></span>
+<span class="nt">home panel</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">shape</span><span class="p">:</span><span class="w"> </span><span class="nv">circle</span><span class="p p-Indicator">}</span><span class="w"></span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Desk</span><span class="w"></span>
+<span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
+</pre></div>
+</div>
+<p>and it prints <code class="docutils literal notranslate"><span class="pre">Shape</span> <span class="pre">is:</span> <span class="pre">circle</span></code>. If we want to load a previous yaml file,
+where say the shape was <code class="docutils literal notranslate"><span class="pre">&quot;square&quot;</span></code> and apply it to the instance, we do:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tree_config</span> <span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">apply_config</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="n">apply_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">load_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;basic_example.yaml&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Shape is: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">panel2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This in turn prints <code class="docutils literal notranslate"><span class="pre">Shape</span> <span class="pre">is:</span> <span class="pre">square</span></code>.</p>
+</section>
+<section id="hooking-property-discovery">
+<h2>Hooking property discovery<a class="headerlink" href="#hooking-property-discovery" title="Permalink to this headline"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">_config_props_</span></code> and <code class="docutils literal notranslate"><span class="pre">_config_children_</span></code> are defined on a class, not on
+instances. When <code class="docutils literal notranslate"><span class="pre">tree-config</span></code> uses them, it will walk the whole class
+hierarchy and accumulate their values from all super classes because a
+sub-class does not overwrite them, but rather adds to them.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">_config_props</span></code> and/or <code class="docutils literal notranslate"><span class="pre">_config_children</span></code> is defined on a
+class or instance, tree-config will use that value directly, instead of
+walking <code class="docutils literal notranslate"><span class="pre">_config_props_</span></code> and/or <code class="docutils literal notranslate"><span class="pre">_config_children_</span></code>, respectively.</p>
+<p>E.g. the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tree_config</span> <span class="kn">import</span> <span class="n">dump_config</span><span class="p">,</span> <span class="n">read_config_from_object</span>
+
+
+<span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_children_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;app panel&#39;</span><span class="p">:</span> <span class="s1">&#39;panel1&#39;</span><span class="p">,</span> <span class="s1">&#39;home panel&#39;</span><span class="p">:</span> <span class="s1">&#39;panel2&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel1</span> <span class="o">=</span> <span class="n">AppPanel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel2</span> <span class="o">=</span> <span class="n">HomePanel</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">RootPanel</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">12</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Desk&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">AppPanel</span><span class="p">(</span><span class="n">RootPanel</span><span class="p">):</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;A4FF67&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">HomePanel</span><span class="p">(</span><span class="n">AppPanel</span><span class="p">):</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">shape</span> <span class="o">=</span> <span class="s1">&#39;circle&#39;</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;window&#39;</span>
+
+    <span class="n">_config_props</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>when run with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="c1"># now get and save config to yaml file</span>
+<span class="n">dump_config</span><span class="p">(</span><span class="s1">&#39;hook_properties.yaml&#39;</span><span class="p">,</span> <span class="n">read_config_from_object</span><span class="p">(</span><span class="n">app</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>will generate this yaml file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">app panel</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A4FF67</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Desk</span><span class="w"></span>
+<span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
+<span class="nt">home panel</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">window</span><span class="w"></span>
+<span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Notice how <code class="docutils literal notranslate"><span class="pre">app</span> <span class="pre">panel</span></code> contains the properties
+of both <code class="docutils literal notranslate"><span class="pre">RootPanel</span></code> and <code class="docutils literal notranslate"><span class="pre">AppPanel</span></code>, while <code class="docutils literal notranslate"><span class="pre">home</span> <span class="pre">panel</span></code> only has the
+properties listed in <code class="docutils literal notranslate"><span class="pre">_config_props</span></code>. <code class="docutils literal notranslate"><span class="pre">_config_children</span></code> behaves
+similarly.</p>
+</section>
+<section id="custom-values-hooks">
+<h2>Custom values hooks<a class="headerlink" href="#custom-values-hooks" title="Permalink to this headline"></a></h2>
+<p>We may wish to hook the property getting/setting process to
+change the value before it is saved or before it is applied again.</p>
+<p>E.g. consider that we have a property that stores a namedtuple that we need
+to dump as a list (because yaml doesn’t understand named tuple) and create
+a named tuple again when restoring. <code class="docutils literal notranslate"><span class="pre">get_config_property</span></code> and
+<code class="docutils literal notranslate"><span class="pre">apply_config_property</span></code> are the needed hook methods, that are
+automatically used if present in the class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">tree_config</span> <span class="kn">import</span> <span class="n">dump_config</span><span class="p">,</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">apply_config</span><span class="p">,</span> \
+    <span class="n">read_config_from_object</span>
+
+<span class="n">Point</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+
+
+<span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;point&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+
+    <span class="n">point</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">34</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">get_config_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;point&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">apply_config_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;point&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="o">*</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tree_config</span> <span class="kn">import</span> <span class="n">dump_config</span><span class="p">,</span> <span class="n">read_config_from_object</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="n">dump_config</span><span class="p">(</span><span class="s1">&#39;custom_value_example.yaml&#39;</span><span class="p">,</span> <span class="n">read_config_from_object</span><span class="p">(</span><span class="n">app</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;point is: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">point</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>creates a <code class="docutils literal notranslate"><span class="pre">custom_value_example.yaml</span></code> file with the following contents:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="nt">point</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">11</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">34</span><span class="p p-Indicator">]</span><span class="w"></span>
+</pre></div>
+</div>
+<p>and it prints <code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">is:</span> <span class="pre">Point(x=11,</span> <span class="pre">y=34)</span></code>. If we want to load and apply the
+yaml file again, we do:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tree_config</span> <span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">apply_config</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="n">apply_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">load_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;custom_value_example.yaml&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;point is: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">point</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This in turn prints again <code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">is:</span> <span class="pre">Point(x=11,</span> <span class="pre">y=34)</span></code>.</p>
+<p>See also <code class="docutils literal notranslate"><span class="pre">apply_config_child</span></code> for similarly hooking into applying the children
+objects. The default, when not provided is to use <code class="docutils literal notranslate"><span class="pre">apply_config</span></code>, so if
+overriding, that should probably also be used for the base case.</p>
+<section id="custom-tags-pickling">
+<h3>Custom tags (pickling)<a class="headerlink" href="#custom-tags-pickling" title="Permalink to this headline"></a></h3>
+<p>Yaml offers support for representing arbitrary objects using custom tags in the
+file. This enables global support for the objects, without having to use
+<code class="docutils literal notranslate"><span class="pre">get_config_property</span></code> / <code class="docutils literal notranslate"><span class="pre">apply_config_property</span></code> wherever they are used.</p>
+<p>Using the point example above:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">tree_config</span> <span class="kn">import</span> <span class="n">dump_config</span><span class="p">,</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">apply_config</span><span class="p">,</span> \
+    <span class="n">read_config_from_object</span>
+<span class="kn">from</span> <span class="nn">ruamel.yaml</span> <span class="kn">import</span> <span class="n">BaseConstructor</span><span class="p">,</span> <span class="n">BaseRepresenter</span>
+
+<span class="n">Point</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+
+<span class="n">yaml_tag</span> <span class="o">=</span> <span class="s1">&#39;!tree_config_example_point&#39;</span>
+
+<span class="c1"># encoder</span>
+<span class="k">def</span> <span class="nf">_represent_point</span><span class="p">(</span><span class="n">representer</span><span class="p">:</span> <span class="n">BaseRepresenter</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">representer</span><span class="o">.</span><span class="n">represent_sequence</span><span class="p">(</span><span class="n">yaml_tag</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+
+<span class="c1"># decoder</span>
+<span class="k">def</span> <span class="nf">_construct_point</span><span class="p">(</span><span class="n">constructor</span><span class="p">:</span> <span class="n">BaseConstructor</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="o">*</span><span class="n">constructor</span><span class="o">.</span><span class="n">construct_sequence</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
+
+<span class="c1"># tell yaml how to represent a Point</span>
+<span class="k">def</span> <span class="nf">register_point_yaml_support</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">BaseRepresenter</span><span class="o">.</span><span class="n">add_multi_representer</span><span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">_represent_point</span><span class="p">)</span>
+    <span class="n">BaseConstructor</span><span class="o">.</span><span class="n">add_multi_constructor</span><span class="p">(</span><span class="n">yaml_tag</span><span class="p">,</span> <span class="n">_construct_point</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;point&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+
+    <span class="n">point</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">34</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+<p>Now, call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">register_point_yaml_support</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>before running the tree-config dumping/loading code from the last section and
+it will generate a yaml file with contents:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="nt">point</span><span class="p">:</span><span class="w"> </span><span class="kt">!tree_config_example_point</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">11</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">34</span><span class="p p-Indicator">]</span><span class="w"></span>
+</pre></div>
+</div>
+<p>See also <code class="docutils literal notranslate"><span class="pre">yaml_dumps</span></code> and <code class="docutils literal notranslate"><span class="pre">yaml_loads</span></code> for additional customization.
+Most functions take a <code class="docutils literal notranslate"><span class="pre">yaml_dump_str</span></code> / <code class="docutils literal notranslate"><span class="pre">yaml_load_str</span></code> to allow further
+customizing the yaml objects. See also <code class="docutils literal notranslate"><span class="pre">register_torch_yaml_support</span></code>
+in <code class="docutils literal notranslate"><span class="pre">tree_config.yaml</span></code> for a more complete example as well as some built-in
+optional representers that can be registered directly.</p>
+</section>
+</section>
+<section id="post-applying-dispatch">
+<h2>Post-applying dispatch<a class="headerlink" href="#post-applying-dispatch" title="Permalink to this headline"></a></h2>
+<p>After applying configuration to a object and its children objects,
+tree-config will call the <code class="docutils literal notranslate"><span class="pre">post_config_applied</span></code> method of the object, if
+the method exists. E.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tree_config</span> <span class="kn">import</span> <span class="n">dump_config</span><span class="p">,</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">apply_config</span><span class="p">,</span> \
+    <span class="n">read_config_from_object</span>
+
+
+<span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+
+    <span class="n">_config_children_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;app panel&#39;</span><span class="p">:</span> <span class="s1">&#39;panel&#39;</span><span class="p">}</span>
+
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">12</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Desk&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span> <span class="o">=</span> <span class="n">Panel</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">apply_config_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;applying&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">post_config_applied</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done applying app&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Panel</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;A4FF67&#39;</span>
+
+    <span class="k">def</span> <span class="nf">apply_config_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;applying&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">post_config_applied</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done applying panel&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, saving and again applying the yaml using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create app and set properties</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+
+<span class="c1"># now get and save config to yaml file</span>
+<span class="n">dump_config</span><span class="p">(</span><span class="s1">&#39;post_apply_dispatch.yaml&#39;</span><span class="p">,</span> <span class="n">read_config_from_object</span><span class="p">(</span><span class="n">app</span><span class="p">))</span>
+<span class="c1"># load config and apply it</span>
+<span class="n">apply_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">load_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;post_apply_dispatch.yaml&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>prints the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">applying</span> <span class="n">color</span>
+<span class="n">done</span> <span class="n">applying</span> <span class="n">panel</span>
+<span class="n">applying</span> <span class="n">name</span>
+<span class="n">applying</span> <span class="n">size</span>
+<span class="n">done</span> <span class="n">applying</span> <span class="n">app</span>
+</pre></div>
+</div>
+</section>
+<section id="configurable-class">
+<h2>Configurable class<a class="headerlink" href="#configurable-class" title="Permalink to this headline"></a></h2>
+<p>The above examples used a duck typing approach to these special configuration/hook
+methods, and any/all of these methods were optional. tree-config also offers a
+<code class="docutils literal notranslate"><span class="pre">Configurable</span></code> superclass that defines all these methods with appropriate
+default values.</p>
+<p>There’s no benefit to inheriting from <code class="docutils literal notranslate"><span class="pre">Configurable</span></code>, but it does provide a
+baseclass listing all the special configuration methods. Additionally,
+it does cache the list of properties/config children for each class,
+so once looked up, it does not need to walk the tree, unlike the duck
+typing approach that re-computes at every save/apply.</p>
+</section>
+</section>
+<section id="auto-docs">
+<h1>Auto docs<a class="headerlink" href="#auto-docs" title="Permalink to this headline"></a></h1>
+<p>In addition to configuration, tree-config can also hook into the sphinx doc
+generating build steps and generate docs listing all the properties that
+can be configured by the application and show the doc string for each of them.
+This is helpful to users who want to configure these properties using the
+configuration yaml file.</p>
+<p>The example directory has a complete doc example.</p>
+<p>Given a root object (e.g. App in the examples), we can add callbacks in
+<code class="docutils literal notranslate"><span class="pre">conf.py</span></code> that is called by sphinx as it encounters properties listed in
+<code class="docutils literal notranslate"><span class="pre">_config_props_</span></code>. The callback then saves the doc strings of these properties
+into a yaml file.</p>
+<p>Subsequently, when the build is done, tree-config can go through all the
+configurable properties and starting from the root object or class, extract
+the doc strings from the yaml file, and create a rst file of those docstrings.</p>
+<p>E.g. starting with this code in :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The app.&quot;&quot;&quot;</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+
+    <span class="n">_config_children_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;app panel&#39;</span><span class="p">:</span> <span class="s1">&#39;panel1&#39;</span><span class="p">,</span> <span class="s1">&#39;home panel&#39;</span><span class="p">:</span> <span class="s1">&#39;panel2&#39;</span><span class="p">}</span>
+
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">55</span>
+    <span class="sd">&quot;&quot;&quot;Some filename.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Some name.&quot;&quot;&quot;</span>
+
+    <span class="n">panel1</span><span class="p">:</span> <span class="s1">&#39;AppPanel&#39;</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;The app panel.&quot;&quot;&quot;</span>
+
+    <span class="n">panel2</span><span class="p">:</span> <span class="s1">&#39;HomePanel&#39;</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;The home panel.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel1</span> <span class="o">=</span> <span class="n">AppPanel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel1</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel2</span> <span class="o">=</span> <span class="n">HomePanel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+
+
+<span class="k">class</span> <span class="nc">AppPanel</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The app panel.&quot;&quot;&quot;</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Color of the app.&quot;&quot;&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">HomePanel</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The home panel.&quot;&quot;&quot;</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">shape</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Shape of the home.&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>then, we add the following to the top of the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">config_example</span> <span class="kn">import</span> <span class="n">App</span>
+<span class="kn">from</span> <span class="nn">tree_config.doc_gen</span> <span class="kn">import</span> <span class="n">create_doc_listener</span><span class="p">,</span> <span class="n">write_config_props_rst</span>
+</pre></div>
+</div>
+<p>the exact path added to <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> depends on where the code is, or if it’s a python
+package that is not needed because it’s already installed.</p>
+<p>We also need to add <code class="docutils literal notranslate"><span class="pre">'sphinx.ext.autodoc'</span></code> to the list of extensions. Finally,
+at the end of <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> add:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+    <span class="c1"># dump all config_example package/subpackages config docstrings to config_prop_docs.yaml</span>
+    <span class="n">create_doc_listener</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;config_example&#39;</span><span class="p">,</span> <span class="s1">&#39;config_prop_docs.yaml&#39;</span><span class="p">)</span>
+
+    <span class="c1"># then get docstrings from yaml file, walk all config properties from App and</span>
+    <span class="c1"># dump formatted config docs to source/config.rst</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="s1">&#39;build-finished&#39;</span><span class="p">,</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="n">write_config_props_rst</span><span class="p">,</span> <span class="n">App</span><span class="p">,</span> <span class="s1">&#39;config_example&#39;</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;config_prop_docs.yaml&#39;</span><span class="p">,</span> <span class="n">rst_filename</span><span class="o">=</span><span class="s1">&#39;source/config.rst&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, to the sphinx generated <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> we added <code class="docutils literal notranslate"><span class="pre">config.rst</span></code> (the filename
+of the file that will be automatically created under source).
+We also need to add somewhere in the index or files it references the auto-doc
+references for all the classes, otherwise we won’t get the relevant docstrings.
+We added it as:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
+   <span class="nc">:maxdepth:</span> 2
+   <span class="nc">:caption:</span> Contents:
+
+   config.rst
+
+
+<span class="gh">API</span>
+<span class="gh">===</span>
+
+<span class="p">..</span> <span class="ow">automodule</span><span class="p">::</span> config_example
+   <span class="nc">:members:</span>
+</pre></div>
+</div>
+<p>in <code class="docutils literal notranslate"><span class="pre">index.rst</span></code>.</p>
+<p>Finally, we run:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s1">$&#39;Config\n===========&#39;</span> &gt; source/config.rst
+make html
+make html
+</pre></div>
+</div>
+<p>First we created a mostly empty config.rst file. Otherwise sphinx doesn’t
+include it when it is generated. Next we ran <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> twice, the first
+time it automatically generates the following <code class="docutils literal notranslate"><span class="pre">config_prop_docs.yaml</span></code> file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">config_example.App</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Some name.</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Some filename.</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="nt">config_example.AppPanel</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">color</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Color of the app.</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="nt">config_example.HomePanel</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">shape</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Shape of the home.</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The second <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> extracts the docstrings from this yaml file and
+uses that create <code class="docutils literal notranslate"><span class="pre">config.rst</span></code> with the following contents:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">CONFIG_EXAMPLE Config</span>
+<span class="gh">=====================</span>
+
+The following are the configuration options provided by the app. It can be configured by changing appropriate values in the <span class="s">``config.yaml``</span> settings file. The options default to the default value of the classes for each of the options.
+
+<span class="nv">`name`</span>:
+ Default value::
+
+  &#39;&#39;
+
+ Some name.
+
+<span class="nv">`size`</span>:
+ Default value::
+
+  55
+
+ Some filename.
+
+
+<span class="gh">home panel</span>
+<span class="gh">----------</span>
+
+<span class="nv">`shape`</span>:
+ Default value::
+
+  &#39;&#39;
+
+ Shape of the home.
+
+
+<span class="gh">app panel</span>
+<span class="gh">---------</span>
+
+<span class="nv">`color`</span>:
+ Default value::
+
+  &#39;&#39;
+
+ Color of the app.
+</pre></div>
+</div>
+<p>This rst is automatically rendered by sphinx to nice html with the rest of the docs and
+it looks something like:</p>
+</section>
+<hr class="docutils" />
+<section id="config-example-config">
+<h1>CONFIG_EXAMPLE Config<a class="headerlink" href="#config-example-config" title="Permalink to this headline"></a></h1>
+<p>The following are the configuration options provided by the app. It can be configured by changing appropriate values in the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> settings file. The options default to the default value of the classes for each of the options.</p>
+<dl>
+<dt><cite>name</cite>:</dt><dd><p>Default value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+<p>Some name.</p>
+</dd>
+<dt><cite>size</cite>:</dt><dd><p>Default value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">55</span>
+</pre></div>
+</div>
+<p>Some filename.</p>
+</dd>
+</dl>
+<section id="home-panel">
+<h2>home panel<a class="headerlink" href="#home-panel" title="Permalink to this headline"></a></h2>
+<dl>
+<dt><cite>shape</cite>:</dt><dd><p>Default value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+<p>Shape of the home.</p>
+</dd>
+</dl>
+</section>
+<section id="app-panel">
+<h2>app panel<a class="headerlink" href="#app-panel" title="Permalink to this headline"></a></h2>
+<dl>
+<dt><cite>color</cite>:</dt><dd><p>Default value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+<p>Color of the app.</p>
+</dd>
+</dl>
+</section>
+<hr class="docutils" />
+<section id="class-vs-instance">
+<h2>Class vs instance<a class="headerlink" href="#class-vs-instance" title="Permalink to this headline"></a></h2>
+<p>The configuration examples above save the config from the App <em>instance</em>.
+One can also use the App <em>class</em> to dump the yaml. The major difference is that the
+<code class="docutils literal notranslate"><span class="pre">apply_config_child</span></code>, <code class="docutils literal notranslate"><span class="pre">get_config_property</span></code>, <code class="docutils literal notranslate"><span class="pre">apply_config_property</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">post_config_applied</span></code> methods, which are instance methods, are skipped and
+not used.</p>
+<p>Also, unlike for instances, where it would fail if <code class="docutils literal notranslate"><span class="pre">_config_children_</span></code> lists
+a child property whose value is None, for the class it will fallback on the type
+hint of the property, if one is defined.</p>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">App</span></code> class, rather than a <code class="docutils literal notranslate"><span class="pre">App()</span></code> instance is helpful during doc
+building when it may not be possible to instantiate the full App
+(see the docs example above that uses the class instance with type hints).</p>
+</section>
+<section id="reusing-other-project-docs">
+<h2>Reusing other project docs<a class="headerlink" href="#reusing-other-project-docs" title="Permalink to this headline"></a></h2>
+<p>Because we rely on autodoc to generate <code class="docutils literal notranslate"><span class="pre">config_prop_docs.yaml</span></code>, tree-config
+provides a mechanism to reuse the docstrings from other projects we depend on.</p>
+<p>E.g. imagine we depend on <code class="docutils literal notranslate"><span class="pre">remote1</span></code> and <code class="docutils literal notranslate"><span class="pre">remote2</span></code> projects who defines classes
+that is configurable and our projects inherits and extends them with further
+configurable properties.
+Also assume these remote projects dumped their configurable docstrings to
+<code class="docutils literal notranslate"><span class="pre">config_prop_docs.yaml</span></code> like in the example and made it available in the
+root of their sphinx generated docs e.g. on github-pages.</p>
+<p>Then, tree-config provides tools to merge those docstrings into ours to be able
+to create <code class="docutils literal notranslate"><span class="pre">config.rst</span></code> from them as follows:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s1">$&#39;Config\n===========&#39;</span> &gt; source/config.rst
+python -m tree_config.doc_gen download <span class="se">\</span>
+    -u <span class="s2">&quot;https://user.github.io/remote1/config_prop_docs.yaml&quot;</span> -o config_prop_docs.yaml
+python -m tree_config.doc_gen download -f config_prop_docs.yaml <span class="se">\</span>
+    -u <span class="s2">&quot;https://matham.github.io/remote2/config_prop_docs.yaml&quot;</span> -o config_prop_docs.yaml
+make html
+make html
+</pre></div>
+</div>
+<p>This downloads and merges the yaml files from our dependencies, adds to it our own
+docs, and generates the <code class="docutils literal notranslate"><span class="pre">config.rst</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to tree-config’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Matthew Einhorn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

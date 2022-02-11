@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API &mdash; tree-config  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="tree-config" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> tree-config
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">tree-config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html#configuration-usage">Configuration usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html#auto-docs">Auto docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html#config-example-config">CONFIG_EXAMPLE Config</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#yaml-module">Yaml module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-generation">Documentation generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#command-line">Command line</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#utils">Utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tree-config</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api">
+<span id="id1"></span><h1>API<a class="headerlink" href="#api" title="Permalink to this headline"></a></h1>
+<span class="target" id="module-tree_config"></span><section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"></a></h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">tree-config</span></code> provides the tools to configure applications where the
+objects to be configured are nested in a tree-like fashion such that they
+can be represented as nested dicts in e.g. a yaml file.</p>
+<p>See the guide for complete examples.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="tree_config.Configurable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">Configurable</span></span><a class="headerlink" href="#tree_config.Configurable" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p><a class="reference internal" href="#module-tree_config" title="tree_config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tree_config</span></code></a> uses a duck typing approach. E.g. when applying
+config, <a class="reference internal" href="#tree_config.apply_config" title="tree_config.apply_config"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply_config()</span></code></a> will call <code class="docutils literal notranslate"><span class="pre">apply_config_property</span></code> if it is
+defined for the objects being configured, otherwise it directly sets the
+properties.</p>
+<p>The <a class="reference internal" href="#tree_config.Configurable" title="tree_config.Configurable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configurable</span></code></a> can be used as a base-class instead of the duck
+typing approach and it defines all the special config methods. It can also
+be used as a guide to the names of the special config hooks available
+when using the duck typing approach.</p>
+<p>There are only two possible benefits to using <a class="reference internal" href="#tree_config.Configurable" title="tree_config.Configurable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configurable</span></code></a>.
+(1) it defines <code class="docutils literal notranslate"><span class="pre">_config_props</span></code> / <code class="docutils literal notranslate"><span class="pre">_config_children</span></code>
+which caches the names of the configurable properties / children on a
+per-class basis. Unlike the duck typing approach that gathers them afresh
+every time. (2) You can use <code class="docutils literal notranslate"><span class="pre">super</span></code> for properties you want to use the
+default handling approach as in the following example.</p>
+<p>However, the main reason for the class’ existance is to define the
+configuration API in one place so we can refer to the method names.</p>
+<p>Consider a duck typing example and the inheritance based example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DuckApp</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">)</span>
+
+    <span class="n">frame</span> <span class="o">=</span> <span class="s1">&#39;square&#39;</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
+
+<span class="k">class</span> <span class="nc">ConfigurableApp</span><span class="p">(</span><span class="n">Configurable</span><span class="p">):</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">)</span>
+
+    <span class="n">frame</span> <span class="o">=</span> <span class="s1">&#39;square&#39;</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
+</pre></div>
+</div>
+<p>Both behave identically with respect to configuration:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_config_from_object</span><span class="p">(</span><span class="n">DuckApp</span><span class="p">())</span>
+<span class="go">{&#39;frame&#39;: &#39;square&#39;, &#39;color&#39;: &#39;blue&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_config_from_object</span><span class="p">(</span><span class="n">ConfigurableApp</span><span class="p">())</span>
+<span class="go">{&#39;frame&#39;: &#39;square&#39;, &#39;color&#39;: &#39;blue&#39;}</span>
+</pre></div>
+</div>
+<p>However, if we wanted to customize setting the <code class="docutils literal notranslate"><span class="pre">frame</span></code> property, using
+<a class="reference internal" href="#tree_config.Configurable" title="tree_config.Configurable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configurable</span></code></a> will be slighlty simpler since you can call super
+to set the remaining properties in the default way. E.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DuckApp</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">)</span>
+
+    <span class="n">frame</span> <span class="o">=</span> <span class="s1">&#39;square&#39;</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
+
+    <span class="k">def</span> <span class="nf">apply_config_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;frame&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">ConfigurableApp</span><span class="p">(</span><span class="n">Configurable</span><span class="p">):</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">)</span>
+
+    <span class="n">frame</span> <span class="o">=</span> <span class="s1">&#39;square&#39;</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
+
+    <span class="k">def</span> <span class="nf">apply_config_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;frame&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">apply_config_property</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="tree_config.Configurable._config_children">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_config_children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#tree_config.Configurable._config_children" title="Permalink to this definition"></a></dt>
+<dd><p>A property, which if defined will be used to get all the configurable
+children instead of using <code class="xref py py-attr docutils literal notranslate"><span class="pre">_config_children_</span></code>. It returns the
+dict of configurable children like <code class="xref py py-attr docutils literal notranslate"><span class="pre">_config_children_</span></code>.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tree_config.Configurable._config_props">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_config_props</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#tree_config.Configurable._config_props" title="Permalink to this definition"></a></dt>
+<dd><p>A property, which if defined will be used to get all the configurable
+properties instead of using <code class="xref py py-attr docutils literal notranslate"><span class="pre">_config_props_</span></code>. It returns the
+list of configurable properties like <code class="xref py py-attr docutils literal notranslate"><span class="pre">_config_props_</span></code>.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tree_config.Configurable.apply_config_child">
+<span class="sig-name descname"><span class="pre">apply_config_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#tree_config.Configurable.apply_config_child" title="Permalink to this definition"></a></dt>
+<dd><p>If defined, it is called to apply the configuration for all the
+properties of the child, for each child.</p>
+<p>When defined, it must either call <a class="reference internal" href="#tree_config.apply_config" title="tree_config.apply_config"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply_config()</span></code></a> which also
+implicitly dispatches <a class="reference internal" href="#tree_config.Configurable.post_config_applied" title="tree_config.Configurable.post_config_applied"><code class="xref py py-meth docutils literal notranslate"><span class="pre">post_config_applied()</span></code></a>. If you manually
+configure the child, you also have to call <a class="reference internal" href="#tree_config.Configurable.post_config_applied" title="tree_config.Configurable.post_config_applied"><code class="xref py py-meth docutils literal notranslate"><span class="pre">post_config_applied()</span></code></a>
+manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The human friendly name of the child that will be
+configured. It is the same as the keys in <code class="xref py py-attr docutils literal notranslate"><span class="pre">_config_children_</span></code>.</p></li>
+<li><p><strong>prop</strong> – The property name storing the child that will be
+configured. It is the same as the values in
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">_config_children_</span></code>.</p></li>
+<li><p><strong>obj</strong> – The configurable child object or a list of objects if the
+property is a list.</p></li>
+<li><p><strong>config</strong> – The config dict or list of config dicts to be applied to
+the child(ern).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tree_config.Configurable.apply_config_property">
+<span class="sig-name descname"><span class="pre">apply_config_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tree_config.Configurable.apply_config_property" title="Permalink to this definition"></a></dt>
+<dd><p>If defined, it is called to set the value of a configurable property
+of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the property.</p></li>
+<li><p><strong>value</strong> – The value of the property.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tree_config.Configurable.get_config_property">
+<span class="sig-name descname"><span class="pre">get_config_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#tree_config.Configurable.get_config_property" title="Permalink to this definition"></a></dt>
+<dd><p>If defined, it is called by the configuration system to get the
+value of the named property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the property to get.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tree_config.Configurable.post_config_applied">
+<span class="sig-name descname"><span class="pre">post_config_applied</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tree_config.Configurable.post_config_applied" title="Permalink to this definition"></a></dt>
+<dd><p>If defined, it is called by the configuration system when it finishes
+applying all the configuration properties/children of this object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.apply_config">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">apply_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">obj,</span> <span class="pre">config:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">typing.Any],</span> <span class="pre">get_attr=&lt;built-in</span> <span class="pre">function</span> <span class="pre">getattr&gt;,</span> <span class="pre">set_attr=&lt;built-in</span> <span class="pre">function</span> <span class="pre">setattr&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tree_config.apply_config" title="Permalink to this definition"></a></dt>
+<dd><p>Takes the config data read with e.g. <a class="reference internal" href="#tree_config.read_config_from_object" title="tree_config.read_config_from_object"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_config_from_object()</span></code></a>
+or <a class="reference internal" href="#tree_config.read_config_from_file" title="tree_config.read_config_from_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_config_from_file()</span></code></a> and applies
+them to the object and its children.</p>
+<p>Calls <code class="docutils literal notranslate"><span class="pre">post_config_applied</span></code> on the object and/or its children after they
+are configured if all/any have such a method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The object to which to apply the config.</p></li>
+<li><p><strong>config</strong> – The config dict.</p></li>
+<li><p><strong>get_attr</strong> – The function to use to get the child value from the
+object and its children. defaults to <code class="docutils literal notranslate"><span class="pre">getattr</span></code>.</p></li>
+<li><p><strong>set_attr</strong> – The function to use to set the property values for the
+object and its children. defaults to <code class="docutils literal notranslate"><span class="pre">setattr</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The object’s config is applied before its children’s config is applied.</p>
+<p>E.x.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">_config_children_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;the box&#39;</span><span class="p">:</span> <span class="s1">&#39;box&#39;</span><span class="p">}</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;chair&#39;</span>
+
+    <span class="n">box</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span> <span class="nc">Box</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;volume&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">volume</span> <span class="o">=</span> <span class="mi">12</span>
+
+    <span class="k">def</span> <span class="nf">apply_config_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;applying child&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">post_config_applied</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done applying child&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>then:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="n">Box</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">read_config_from_object</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
+<span class="go">{&#39;the box&#39;: {&#39;volume&#39;: 12}, &#39;name&#39;: &#39;chair&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;bed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;the box&#39;</span><span class="p">][</span><span class="s1">&#39;volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">34</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">apply_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="go">applying child volume</span>
+<span class="go">done applying child</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&#39;bed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">volume</span>
+<span class="go">34</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.dump_config">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">dump_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filename:</span> <span class="pre">typing.Union[str,</span> <span class="pre">pathlib.Path],</span> <span class="pre">data:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">typing.Any],</span> <span class="pre">yaml_dump_str=&lt;function</span> <span class="pre">yaml_dumps&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tree_config.dump_config" title="Permalink to this definition"></a></dt>
+<dd><p>Dumps config data gotten with e.g. <a class="reference internal" href="#tree_config.read_config_from_object" title="tree_config.read_config_from_object"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_config_from_object()</span></code></a>
+to a yaml file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – The yaml filename.</p></li>
+<li><p><strong>data</strong> – The config data.</p></li>
+<li><p><strong>yaml_dump_str</strong> – The function to encode the config to yaml. Defaults
+to <code class="xref py py-func docutils literal notranslate"><span class="pre">yaml_dumps()</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>E.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;chair&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">read_config_from_object</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dump_config</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Which prints <code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">chair</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.get_config_children_items">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">get_config_children_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_or_cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_attr=&lt;built-in</span> <span class="pre">function</span> <span class="pre">getattr&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.get_config_children_items" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a list of 3-tuples of all the configurable children
+of <code class="docutils literal notranslate"><span class="pre">obj_or_cls</span></code>. Each item is is a 3-tuple of
+<code class="docutils literal notranslate"><span class="pre">(friendly_name,</span> <span class="pre">prop_name,</span> <span class="pre">value)</span></code>, where <code class="docutils literal notranslate"><span class="pre">friendly_name</span></code> is the name
+as listed in the keys of <code class="docutils literal notranslate"><span class="pre">_config_children_</span></code>, <code class="docutils literal notranslate"><span class="pre">prop_name</span></code> is the
+property name in the class as listed in the values of <code class="docutils literal notranslate"><span class="pre">_config_children_</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">value</span></code> is the value taken from <code class="docutils literal notranslate"><span class="pre">obj_or_cls</span></code>.</p>
+<p>We get the list of children of the object from
+<a class="reference internal" href="#tree_config.get_config_children_names" title="tree_config.get_config_children_names"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_config_children_names()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_or_cls</strong> – The object or class on which to search for children.</p></li>
+<li><p><strong>get_attr</strong> – The function to use to get the child value from the
+object. defaults to <code class="docutils literal notranslate"><span class="pre">getattr</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>E.x.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_children_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;the box&#39;</span><span class="p">:</span> <span class="s1">&#39;box&#39;</span><span class="p">}</span>
+
+    <span class="n">box</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span> <span class="nc">Box</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>then:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_children_items</span><span class="p">(</span><span class="n">App</span><span class="p">())</span>
+<span class="go">[(&#39;the box&#39;, &#39;box&#39;, None)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_children_items</span><span class="p">(</span><span class="n">App</span><span class="p">)</span>
+<span class="go">[(&#39;the box&#39;, &#39;box&#39;, None)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="n">Box</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_children_items</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+<span class="go">[(&#39;the box&#39;, &#39;box&#39;, &lt;Box at 0x264581a2a90&gt;)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.get_config_children_names">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">get_config_children_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_or_cls</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.get_config_children_names" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a dict of the names friendly and property names of all the
+configurable children of <code class="docutils literal notranslate"><span class="pre">obj_or_cls</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">obj_or_cls</span></code> has a <code class="docutils literal notranslate"><span class="pre">_config_children</span></code> property, that is used to get
+the list of configurable children, otherwise we walk the class and its super
+classes hierarchy using <code class="docutils literal notranslate"><span class="pre">_config_children_</span></code> to get the configurable
+children names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj_or_cls</strong> – The object or class on which to search for children.</p>
+</dd>
+</dl>
+<p>E.x.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_children_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;the box&#39;</span><span class="p">:</span> <span class="s1">&#39;box&#39;</span><span class="p">}</span>
+
+    <span class="n">box</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span> <span class="nc">Box</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>then:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_children_names</span><span class="p">(</span><span class="n">App</span><span class="p">())</span>
+<span class="go">{&#39;the box&#39;: &#39;box&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_children_names</span><span class="p">(</span><span class="n">App</span><span class="p">)</span>
+<span class="go">{&#39;the box&#39;: &#39;box&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.get_config_prop_items">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">get_config_prop_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_or_cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_attr=&lt;built-in</span> <span class="pre">function</span> <span class="pre">getattr&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.get_config_prop_items" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a dict mapping the names of all the configurable properties
+of <code class="docutils literal notranslate"><span class="pre">obj_or_cls</span></code> to its values as gotten from the object or class.</p>
+<p>We get the list of properties of the object from
+<a class="reference internal" href="#tree_config.get_config_prop_names" title="tree_config.get_config_prop_names"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_config_prop_names()</span></code></a>. For each property, if the object has
+a <code class="docutils literal notranslate"><span class="pre">get_config_property</span></code>
+method, that is used to get the value. Otherwise, or if it’s a class
+<code class="docutils literal notranslate"><span class="pre">get_attr</span></code> is used instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_or_cls</strong> – The object or class on which to search for properties.</p></li>
+<li><p><strong>get_attr</strong> – The function to use to get the property value from the
+object. defaults to <code class="docutils literal notranslate"><span class="pre">getattr</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>E.x.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;chair&#39;</span>
+
+<span class="k">class</span> <span class="nc">MyApp</span><span class="p">(</span><span class="n">App</span><span class="p">):</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">location</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">get_config_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;location&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>then:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_prop_items</span><span class="p">(</span><span class="n">MyApp</span><span class="p">())</span>
+<span class="go">{&#39;location&#39;: 8, &#39;name&#39;: &#39;chair&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_prop_items</span><span class="p">(</span><span class="n">MyApp</span><span class="p">)</span>
+<span class="go">{&#39;location&#39;: 0, &#39;name&#39;: &#39;chair&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.get_config_prop_names">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">get_config_prop_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_or_cls</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.get_config_prop_names" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a list of the names of all the configurable properties
+of <code class="docutils literal notranslate"><span class="pre">obj_or_cls</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">obj_or_cls</span></code> has a <code class="docutils literal notranslate"><span class="pre">_config_props</span></code> property, that is used to get the
+list of configurable properties, otherwise we walk the class and its super
+classes hierarchy using <code class="docutils literal notranslate"><span class="pre">_config_props_</span></code> to get the configurable property
+names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj_or_cls</strong> – The object or class on which to search for properties.</p>
+</dd>
+</dl>
+<p>E.x.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;chair&#39;</span>
+
+<span class="k">class</span> <span class="nc">MyApp</span><span class="p">(</span><span class="n">App</span><span class="p">):</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">location</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">get_config_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;location&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>then:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_prop_names</span><span class="p">(</span><span class="n">MyApp</span><span class="p">())</span>
+<span class="go">[&#39;location&#39;, &#39;name&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_prop_names</span><span class="p">(</span><span class="n">MyApp</span><span class="p">)</span>
+<span class="go">[&#39;location&#39;, &#39;name&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.load_apply_save_config">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">load_apply_save_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">obj,</span> <span class="pre">filename:</span> <span class="pre">typing.Union[str,</span> <span class="pre">pathlib.Path],</span> <span class="pre">get_attr=&lt;built-in</span> <span class="pre">function</span> <span class="pre">getattr&gt;,</span> <span class="pre">set_attr=&lt;built-in</span> <span class="pre">function</span> <span class="pre">setattr&gt;,</span> <span class="pre">yaml_dump_str=&lt;function</span> <span class="pre">yaml_dumps&gt;,</span> <span class="pre">yaml_load_str=&lt;function</span> <span class="pre">yaml_loads&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.load_apply_save_config" title="Permalink to this definition"></a></dt>
+<dd><p>Applies the config to the object from the yaml file (if the file doesn’t
+exist it creates it), and then dumps to the yaml file the current config
+from the object. It also returns the final config dict.</p>
+<p>This can be used to set the object from the config, but also making sure the
+file contains the current config including any new properties not previously
+there or properties that changed during config application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The configurable object.</p></li>
+<li><p><strong>filename</strong> – The yaml filename.</p></li>
+<li><p><strong>get_attr</strong> – The function to use to get the property/children values
+from the object. defaults to <code class="docutils literal notranslate"><span class="pre">getattr</span></code>.</p></li>
+<li><p><strong>set_attr</strong> – The function to use to set the property values of the
+object and its children. defaults to <code class="docutils literal notranslate"><span class="pre">setattr</span></code>.</p></li>
+<li><p><strong>yaml_dump_str</strong> – The function to encode the config to yaml. Defaults
+to <code class="xref py py-func docutils literal notranslate"><span class="pre">yaml_dumps()</span></code>.</p></li>
+<li><p><strong>yaml_load_str</strong> – The function to parse the yaml string read from the
+file. Defaults to <code class="xref py py-func docutils literal notranslate"><span class="pre">yaml_loads()</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>E.x.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;chair&#39;</span>
+
+<span class="k">class</span> <span class="nc">AppV2</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;side&#39;</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;chair&#39;</span>
+
+    <span class="n">side</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
+</pre></div>
+</div>
+<p>then:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;tree&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">load_apply_save_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;config_app.yaml&#39;</span><span class="p">)</span>
+<span class="go">{&#39;name&#39;: &#39;tree&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&#39;tree&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># then later for v2 of the app</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app_v2</span> <span class="o">=</span> <span class="n">AppV2</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app_v2</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&#39;chair&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">load_apply_save_config</span><span class="p">(</span><span class="n">app_v2</span><span class="p">,</span> <span class="s1">&#39;config_app.yaml&#39;</span><span class="p">)</span>
+<span class="go">{&#39;name&#39;: &#39;tree&#39;, &#39;side&#39;: &#39;left&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app_v2</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&#39;tree&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;config_app.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>this prints:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span><span class="p">:</span> <span class="n">tree</span>
+<span class="n">side</span><span class="p">:</span> <span class="n">left</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.load_config">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">obj,</span> <span class="pre">filename:</span> <span class="pre">typing.Union[str,</span> <span class="pre">pathlib.Path],</span> <span class="pre">get_attr=&lt;built-in</span> <span class="pre">function</span> <span class="pre">getattr&gt;,</span> <span class="pre">yaml_dump_str=&lt;function</span> <span class="pre">yaml_dumps&gt;,</span> <span class="pre">yaml_load_str=&lt;function</span> <span class="pre">yaml_loads&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.load_config" title="Permalink to this definition"></a></dt>
+<dd><p>Loads and decodes the config from a yaml file. If the config file doesn’t
+exist, it first dumps the config to the file using
+<a class="reference internal" href="#tree_config.read_config_from_object" title="tree_config.read_config_from_object"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_config_from_object()</span></code></a> and <a class="reference internal" href="#tree_config.dump_config" title="tree_config.dump_config"><code class="xref py py-func docutils literal notranslate"><span class="pre">dump_config()</span></code></a> before loading it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The object from which to dump the config when the files doesn’t
+exist.</p></li>
+<li><p><strong>filename</strong> – The yaml filename.</p></li>
+<li><p><strong>get_attr</strong> – The function to use to get the property/children values
+from the object. defaults to <code class="docutils literal notranslate"><span class="pre">getattr</span></code>.</p></li>
+<li><p><strong>yaml_dump_str</strong> – The function to encode the config to yaml. Defaults
+to <code class="xref py py-func docutils literal notranslate"><span class="pre">yaml_dumps()</span></code>.</p></li>
+<li><p><strong>yaml_load_str</strong> – The function to parse the yaml string read from the
+file. Defaults to <code class="xref py py-func docutils literal notranslate"><span class="pre">yaml_loads()</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>E.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;chair&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">load_config</span><span class="p">(</span><span class="n">App</span><span class="p">(),</span> <span class="s1">&#39;app_config.yaml&#39;</span><span class="p">)</span>
+<span class="go">{&#39;name&#39;: &#39;chair&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.read_config_from_file">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">read_config_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filename:</span> <span class="pre">typing.Union[str,</span> <span class="pre">pathlib.Path],</span> <span class="pre">yaml_load_str=&lt;function</span> <span class="pre">yaml_loads&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.read_config_from_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads and returns the yaml config data dict from a file that was
+previously dumped with <a class="reference internal" href="#tree_config.dump_config" title="tree_config.dump_config"><code class="xref py py-func docutils literal notranslate"><span class="pre">dump_config()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – The yaml filename.</p></li>
+<li><p><strong>yaml_load_str</strong> – The function to parse the yaml string read from the
+file. Defaults to <code class="xref py py-func docutils literal notranslate"><span class="pre">yaml_loads()</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>E.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;chair&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">read_config_from_object</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dump_config</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_config_from_file</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">)</span>
+<span class="go">{&#39;name&#39;: &#39;chair&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.read_config_from_object">
+<span class="sig-prename descclassname"><span class="pre">tree_config.</span></span><span class="sig-name descname"><span class="pre">read_config_from_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_attr=&lt;built-in</span> <span class="pre">function</span> <span class="pre">getattr&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.read_config_from_object" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a recursive dict containing all the configuration options of the
+obj and its configurable children.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – The object from which to get the config.</p></li>
+<li><p><strong>get_attr</strong> – The function to use to get the child value from the
+object and its children. defaults to <code class="docutils literal notranslate"><span class="pre">getattr</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>E.x.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">_config_children_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;the box&#39;</span><span class="p">:</span> <span class="s1">&#39;box&#39;</span><span class="p">}</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;chair&#39;</span>
+
+    <span class="n">box</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span> <span class="nc">Box</span><span class="p">:</span>
+
+    <span class="n">_config_props_</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;volume&#39;</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">volume</span> <span class="o">=</span> <span class="mi">12</span>
+</pre></div>
+</div>
+<p>then:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">app</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="n">Box</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_config_from_object</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+<span class="go">{&#39;the box&#39;: {&#39;volume&#39;: 12}, &#39;name&#39;: &#39;chair&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<span class="target" id="module-tree_config.yaml"></span><section id="yaml-module">
+<h2>Yaml module<a class="headerlink" href="#yaml-module" title="Permalink to this headline"></a></h2>
+<p>Provides the functions to create yaml objects, and to dump and load yaml
+using these objects.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.yaml.get_yaml">
+<span class="sig-prename descclassname"><span class="pre">tree_config.yaml.</span></span><span class="sig-name descname"><span class="pre">get_yaml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ruamel.yaml.main.YAML</span></span></span><a class="headerlink" href="#tree_config.yaml.get_yaml" title="Permalink to this definition"></a></dt>
+<dd><p>Creates and returns a yaml object that can be used by
+<a class="reference internal" href="#tree_config.yaml.yaml_dumps" title="tree_config.yaml.yaml_dumps"><code class="xref py py-func docutils literal notranslate"><span class="pre">yaml_dumps()</span></code></a> and <a class="reference internal" href="#tree_config.yaml.yaml_loads" title="tree_config.yaml.yaml_loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">yaml_loads()</span></code></a> to dump and load from yaml files.</p>
+<p>The default flow style (<code class="docutils literal notranslate"><span class="pre">default_flow_style</span></code>) is set to False so the file
+is formatted as expanded. The yaml type instantiated is <code class="docutils literal notranslate"><span class="pre">safe</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.yaml.register_kivy_yaml_support">
+<span class="sig-prename descclassname"><span class="pre">tree_config.yaml.</span></span><span class="sig-name descname"><span class="pre">register_kivy_yaml_support</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tree_config.yaml.register_kivy_yaml_support" title="Permalink to this definition"></a></dt>
+<dd><p>Registers the Kivy properties so it can be encoded to yaml.</p>
+<p>E.g. Some properties create custom list sub-classes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.yaml.register_numpy_yaml_support">
+<span class="sig-prename descclassname"><span class="pre">tree_config.yaml.</span></span><span class="sig-name descname"><span class="pre">register_numpy_yaml_support</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tree_config.yaml.register_numpy_yaml_support" title="Permalink to this definition"></a></dt>
+<dd><p>Registers the numpy data types so it can be encoded to yaml and then
+decoded.</p>
+<p>When it is encountered in an object it is converted to a list
+with a special numpy tag. When decoded, an appropriate numpy type is
+constructed and returned.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.yaml.register_pathlib_yaml_support">
+<span class="sig-prename descclassname"><span class="pre">tree_config.yaml.</span></span><span class="sig-name descname"><span class="pre">register_pathlib_yaml_support</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tree_config.yaml.register_pathlib_yaml_support" title="Permalink to this definition"></a></dt>
+<dd><p>Registers pathlib.Path so it can be encoded and decoded back to Path.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.yaml.register_torch_yaml_support">
+<span class="sig-prename descclassname"><span class="pre">tree_config.yaml.</span></span><span class="sig-name descname"><span class="pre">register_torch_yaml_support</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tree_config.yaml.register_torch_yaml_support" title="Permalink to this definition"></a></dt>
+<dd><p>Registers the torch data types so it can be encoded to yaml and then
+decoded.</p>
+<p>When it is encountered in an object it is converted to a list
+with a special torch tag. When decoded, an appropriate torch type is
+constructed and returned.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.yaml.yaml_dumps">
+<span class="sig-prename descclassname"><span class="pre">tree_config.yaml.</span></span><span class="sig-name descname"><span class="pre">yaml_dumps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value:</span> <span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_yaml_obj:</span> <span class="pre">typing.Callable[[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ruamel.yaml.main.YAML]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">get_yaml&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#tree_config.yaml.yaml_dumps" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to yaml.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – the object to convert.</p></li>
+<li><p><strong>get_yaml_obj</strong> – A function such as <a class="reference internal" href="#tree_config.yaml.get_yaml" title="tree_config.yaml.get_yaml"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_yaml()</span></code></a> that will be called
+to get a yaml object. Defaults to <a class="reference internal" href="#tree_config.yaml.get_yaml" title="tree_config.yaml.get_yaml"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_yaml()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a string yaml representation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.yaml.yaml_loads">
+<span class="sig-prename descclassname"><span class="pre">tree_config.yaml.</span></span><span class="sig-name descname"><span class="pre">yaml_loads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_yaml_obj:</span> <span class="pre">typing.Callable[[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ruamel.yaml.main.YAML]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">get_yaml&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#tree_config.yaml.yaml_loads" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a yaml file and converts it to the objects it represents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – the string to decode.</p></li>
+<li><p><strong>get_yaml_obj</strong> – A function such as <a class="reference internal" href="#tree_config.yaml.get_yaml" title="tree_config.yaml.get_yaml"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_yaml()</span></code></a> that will be called
+to get a yaml object. Defaults to <a class="reference internal" href="#tree_config.yaml.get_yaml" title="tree_config.yaml.get_yaml"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_yaml()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the decoded object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-tree_config.doc_gen"></span><section id="documentation-generation">
+<h2>Documentation generation<a class="headerlink" href="#documentation-generation" title="Permalink to this headline"></a></h2>
+<p>When generating docs, the documentation of the properties listed in
+<code class="docutils literal notranslate"><span class="pre">__config_props__</span></code> can dumped to a yaml file using
+<a class="reference internal" href="#tree_config.doc_gen.create_doc_listener" title="tree_config.doc_gen.create_doc_listener"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_doc_listener()</span></code></a>.</p>
+<p><a class="reference internal" href="#tree_config.doc_gen.write_config_props_rst" title="tree_config.doc_gen.write_config_props_rst"><code class="xref py py-func docutils literal notranslate"><span class="pre">write_config_props_rst()</span></code></a> can load the docstrings from this yaml file
+and then generate a nicely formatted rst file listing all the configurable
+properties of the project. See the user guide for details and complete examples.</p>
+<section id="command-line">
+<h3>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline"></a></h3>
+<p>This module provides two command line options that can call either
+<a class="reference internal" href="#tree_config.doc_gen.download_merge_yaml_doc" title="tree_config.doc_gen.download_merge_yaml_doc"><code class="xref py py-func docutils literal notranslate"><span class="pre">download_merge_yaml_doc()</span></code></a> or <a class="reference internal" href="#tree_config.doc_gen.merge_yaml_doc" title="tree_config.doc_gen.merge_yaml_doc"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge_yaml_doc()</span></code></a> and forwards the
+arguments to these functions. See the guide for examples.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.doc_gen.create_doc_listener">
+<span class="sig-prename descclassname"><span class="pre">tree_config.doc_gen.</span></span><span class="sig-name descname"><span class="pre">create_doc_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sphinx_app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_dump_str=&lt;function</span> <span class="pre">yaml_dumps&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tree_config.doc_gen.create_doc_listener" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a listener for the <code class="docutils literal notranslate"><span class="pre">__config_props__</span></code> attributes and dumps
+the docs of any props listed, to <code class="docutils literal notranslate"><span class="pre">filename</span></code>. If the file
+already exists, it extends it with new data and overwrites any exiting
+properties that we see again in this run.</p>
+<p>To use, in the sphinx conf.py file do something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">package</span>
+    <span class="n">create_doc_listener</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="s1">&#39;config_attrs.yaml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">package</span></code> is the package for which the docs are generated.</p>
+<p>See the guide for a full example.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.doc_gen.download_merge_yaml_doc">
+<span class="sig-prename descclassname"><span class="pre">tree_config.doc_gen.</span></span><span class="sig-name descname"><span class="pre">download_merge_yaml_doc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tree_config.doc_gen.download_merge_yaml_doc" title="Permalink to this definition"></a></dt>
+<dd><p>Downloads a yaml file with previously saved configurable properties
+docstrings, optionally merges it with an existing docstrings yaml file, and
+outputs the merged yaml file. See the guide for an example.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – The optional yaml filename into which to merge the remote
+yaml docstrings.</p></li>
+<li><p><strong>url</strong> – A url to a docstrings containing yaml file that will be
+downloaded and optionally merged into <code class="docutils literal notranslate"><span class="pre">filename</span></code> and output to
+<code class="docutils literal notranslate"><span class="pre">out_filename</span></code>.</p></li>
+<li><p><strong>out_filename</strong> – The filename of the output yaml file.</p></li>
+</ul>
+</dd>
+</dl>
+<p>On the command line it’s invocated as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m tree_config.doc_gen download --help
+usage: Config Docs generation download [-h] [-f FILENAME] -u URL -o
+                                       OUT_FILENAME
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f FILENAME, --filename FILENAME
+                        The optional yaml filename with which to merge
+                        the downloaded file.
+  -u URL, --url URL
+  -o OUT_FILENAME, --out_filename OUT_FILENAME
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.doc_gen.merge_yaml_doc">
+<span class="sig-prename descclassname"><span class="pre">tree_config.doc_gen.</span></span><span class="sig-name descname"><span class="pre">merge_yaml_doc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tree_config.doc_gen.merge_yaml_doc" title="Permalink to this definition"></a></dt>
+<dd><p>Merges two yaml files containing configurable properties docstrings into
+a single output yaml file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename1</strong> – First yaml input filename into which the second is merged.</p></li>
+<li><p><strong>filename2</strong> – Second yaml input filename.</p></li>
+<li><p><strong>out_filename</strong> – The output filename of the resulting yaml file.</p></li>
+</ul>
+</dd>
+</dl>
+<p>On the command line it’s invocated as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m tree_config.doc_gen merge --help
+usage: Config Docs generation merge [-h] -f1 FILENAME1 -f2 FILENAME2 -o
+                                    OUT_FILENAME
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f1 FILENAME1, --filename1 FILENAME1
+  -f2 FILENAME2, --filename2 FILENAME2
+  -o OUT_FILENAME, --out_filename OUT_FILENAME
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.doc_gen.write_config_props_rst">
+<span class="sig-prename descclassname"><span class="pre">tree_config.doc_gen.</span></span><span class="sig-name descname"><span class="pre">write_config_props_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rst_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_attr=&lt;built-in</span> <span class="pre">function</span> <span class="pre">getattr&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_dump_str=&lt;function</span> <span class="pre">yaml_dumps&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tree_config.doc_gen.write_config_props_rst" title="Permalink to this definition"></a></dt>
+<dd><p>Walks through all the configurable classes of <code class="docutils literal notranslate"><span class="pre">obj</span></code>, recursively
+by looking at <code class="docutils literal notranslate"><span class="pre">_config_props_</span></code> and <code class="docutils literal notranslate"><span class="pre">_config_children_</span></code> and using the
+type hints of these children properties if they are None (e.g. if obj is a
+class). For each property it loads their docs from the yaml file
+<code class="docutils literal notranslate"><span class="pre">filename</span></code> and it generates a rst output file at <code class="docutils literal notranslate"><span class="pre">rst_filename</span></code> with
+all the tokens.</p>
+<p>For example in the sphinx conf.py file do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;build-finished&#39;</span><span class="p">,</span> <span class="n">partial</span><span class="p">(</span><span class="n">write_config_props_rst</span><span class="p">,</span> <span class="n">ProjectApp</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;config_prop_docs.yaml&#39;</span><span class="p">,</span> <span class="n">rst_filename</span><span class="o">=</span><span class="s1">&#39;source/config.rst&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>where project_name is the name of project and ProjectApp is the App of the
+package the contains all the configurable objects.</p>
+<p>See the guide for a complete example.</p>
+</dd></dl>
+
+</section>
+</section>
+<span class="target" id="module-tree_config.utils"></span><section id="utils">
+<h2>Utils<a class="headerlink" href="#utils" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="tree_config.utils.class_property">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tree_config.utils.</span></span><span class="sig-name descname"><span class="pre">class_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fdel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tree_config.utils.class_property" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">property</span></code></p>
+<p>Can be used as <code class="docutils literal notranslate"><span class="pre">&#64;class_property</span></code> on a method to make it a class
+property in the same way <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code> can be used on a normal method
+to make it a object property.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.utils.get_class_annotations">
+<span class="sig-prename descclassname"><span class="pre">tree_config.utils.</span></span><span class="sig-name descname"><span class="pre">get_class_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_or_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.utils.get_class_annotations" title="Permalink to this definition"></a></dt>
+<dd><p>Gets a dict of all the annotations of the object/class, including from
+all superclasses. The values are actual object, even if the type is given
+as a string (for forward declarations).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tree_config.utils.get_class_bases">
+<span class="sig-prename descclassname"><span class="pre">tree_config.utils.</span></span><span class="sig-name descname"><span class="pre">get_class_bases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#tree_config.utils.get_class_bases" title="Permalink to this definition"></a></dt>
+<dd><p>Yields all the base-classes of the class, not including the passed class
+or object.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="tree-config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Matthew Einhorn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
