@@ -168,7 +168,8 @@ class Configurable:
         return children
 
     def apply_config_child(
-            self, name: str, prop: str, obj: Any, config: Dict[str, Any]
+            self, name: str, prop: str, obj: Any,
+            config: Union[Dict[str, Any], List[Dict[str, Any]]]
     ) -> Any:
         """If defined, it is called to apply the configuration for all the
         properties of the child, for each child.
@@ -183,10 +184,17 @@ class Configurable:
         :param prop: The property name storing the child that will be
             configured. It is the same as the values in
             :attr:`_config_children_`.
-        :param obj: The configurable child object.
-        :param config: The config dict to be applied to the child.
+        :param obj: The configurable child object or a list of objects if the
+            property is a list.
+        :param config: The config dict or list of config dicts to be applied to
+            the child(ern).
         """
-        apply_config(obj, config)
+        prop_val = getattr(self, prop)
+        if isinstance(prop_val, (list, tuple)):
+            for config_val, config_obj in zip(config, prop_val):
+                apply_config(config_obj, config_val)
+        else:
+            apply_config(obj, config)
 
     def get_config_property(self, name: str) -> Any:
         """If defined, it is called by the configuration system to get the
